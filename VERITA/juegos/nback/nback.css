@@ -1,0 +1,423 @@
+/* juegos/nback/nback.css */
+
+.nback-mini{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:clamp(56px,8vw,100px);
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.22));
+  z-index:2;
+  letter-spacing:-8px;
+}
+.nback-mini span:nth-child(2){ transform:translateX(6px); opacity:.65 }
+
+#nback-hud,
+#nback-vidas,
+#nback-item,
+#nback-estado,
+#nback-boton,
+#nback-boton-avanzar,
+#nback-feedback{ display:none }
+
+#ventana.modo-nback #nback-hud{ display:block }
+#ventana.modo-nback #nback-vidas{ display:flex }
+#ventana.modo-nback #nback-item{ display:flex }
+#ventana.modo-nback #nback-estado{ display:block }
+#ventana.modo-nback #nback-boton{ display:flex }
+
+#ventana.modo-nback #nback-item{
+  position:absolute;
+  top:42%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  font-size:clamp(120px,22vw,220px);
+  line-height:1;
+  z-index:5;
+  user-select:none;
+  filter:drop-shadow(0 6px 16px rgba(0,0,0,.3));
+  transition:transform .18s cubic-bezier(.2,1.4,.4,1), opacity .15s;
+  opacity:0;
+  pointer-events:none;
+}
+#ventana.modo-nback #nback-item.visible{
+  transform:translate(-50%,-50%) scale(1);
+  opacity:1;
+}
+
+#ventana.modo-nback #nback-hud{
+  position:absolute;
+  top:14px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#000;
+  font:700 clamp(12px,1.4vw,16px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:2px;
+  text-transform:lowercase;
+  text-shadow:0 1px 2px rgba(255,255,255,.6);
+  z-index:6;
+  pointer-events:none;
+}
+
+#ventana.modo-nback #nback-vidas{
+  position:absolute;
+  top:14px;
+  right:18px;
+  display:flex;
+  gap:4px;
+  z-index:6;
+  pointer-events:none;
+}
+.nback-vida{
+  font-size:20px;
+  line-height:1;
+  filter:grayscale(1) opacity(.35);
+  transition:filter .3s ease;
+}
+.nback-vida.on{
+  filter:drop-shadow(0 0 4px rgba(231,76,60,.7));
+}
+
+#ventana.modo-nback #nback-estado{
+  position:absolute;
+  top:auto;
+  bottom:110px;
+  left:50%;
+  transform:translateX(-50%);
+  font:900 11px/1 ui-monospace,Consolas,monospace;
+  letter-spacing:1.5px;
+  text-transform:lowercase;
+  color:#666;
+  text-align:center;
+  z-index:6;
+  pointer-events:none;
+  max-width:88%;
+  padding:5px 12px;
+  background:rgba(255,255,255,.85);
+  border-radius:999px;
+  transition:color .15s;
+}
+#ventana.modo-nback #nback-estado.puedes{
+  color:#0a8f52;
+  font-weight:900;
+}
+
+/* botón principal (auto: ahora · manual: pulsar) */
+#ventana.modo-nback #nback-boton{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(78vw, 400px);
+  height:80px;
+  background:#0a8f52;
+  color:#fff;
+  border:5px solid #111;
+  border-radius:24px;
+  font:900 clamp(22px,2.8vw,30px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:0 6px 0 #065f36, 0 10px 20px rgba(0,0,0,.3);
+  transition:transform .08s, box-shadow .08s, background .12s;
+  font-family:inherit;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  align-items:center;
+  justify-content:center;
+  z-index:7;
+}
+#ventana.modo-nback #nback-boton:active,
+#ventana.modo-nback #nback-boton.pulsado{
+  transform:translateX(-50%) translateY(4px);
+  box-shadow:0 2px 0 #065f36, 0 4px 8px rgba(0,0,0,.25);
+}
+#ventana.modo-nback #nback-boton.esperando{
+  background:#bbb;
+  box-shadow:0 6px 0 #888, 0 10px 20px rgba(0,0,0,.15);
+  cursor:not-allowed;
+  letter-spacing:3px;
+  font-size:clamp(16px,2vw,20px);
+}
+
+/* botón avanzar (solo manual) */
+#ventana.modo-nback #nback-boton-avanzar{ display:none }
+#ventana.modo-nback.nback-manual #nback-boton-avanzar{ display:flex }
+
+/* en modo manual, dos botones lado a lado */
+#ventana.modo-nback.nback-manual #nback-boton,
+#ventana.modo-nback.nback-manual #nback-boton-avanzar{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  width:min(36vw, 190px);
+  height:80px;
+  border:5px solid #111;
+  border-radius:22px;
+  font:900 clamp(16px,2vw,22px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:3px;
+  text-transform:lowercase;
+  cursor:pointer;
+  transition:transform .08s, box-shadow .08s, background .12s;
+  font-family:inherit;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  align-items:center;
+  justify-content:center;
+  z-index:7;
+  padding:0;
+}
+#ventana.modo-nback.nback-manual #nback-boton{
+  transform:translateX(calc(-50% - 100px));
+  background:#0a8f52;
+  color:#fff;
+  box-shadow:0 6px 0 #065f36, 0 10px 20px rgba(0,0,0,.3);
+}
+#ventana.modo-nback.nback-manual #nback-boton:active,
+#ventana.modo-nback.nback-manual #nback-boton.pulsado{
+  transform:translateX(calc(-50% - 100px)) translateY(4px);
+  box-shadow:0 2px 0 #065f36, 0 4px 8px rgba(0,0,0,.25);
+}
+#ventana.modo-nback.nback-manual #nback-boton-avanzar{
+  transform:translateX(calc(-50% + 100px));
+  background:#3b82f6;
+  color:#fff;
+  box-shadow:0 6px 0 #1e40af, 0 10px 20px rgba(0,0,0,.3);
+}
+#ventana.modo-nback.nback-manual #nback-boton-avanzar:active{
+  transform:translateX(calc(-50% + 100px)) translateY(4px);
+  box-shadow:0 2px 0 #1e40af, 0 4px 8px rgba(0,0,0,.25);
+}
+
+#ventana.modo-nback #nback-feedback{
+  position:absolute;
+  top:42%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(.5);
+  font:900 clamp(70px,12vw,140px)/1 ui-monospace,Consolas,monospace;
+  z-index:8;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .25s, transform .25s;
+}
+#ventana.modo-nback #nback-feedback.on{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+}
+#ventana.modo-nback #nback-feedback.ok{ color:#22c55e; -webkit-text-stroke:3px #111 }
+#ventana.modo-nback #nback-feedback.error{ color:#e74c3c; -webkit-text-stroke:3px #111 }
+#ventana.modo-nback #nback-feedback.silencio{ color:#94a3b8; -webkit-text-stroke:2px #111; font-size:clamp(50px,8vw,90px) }
+
+#nback-pista{ display:none !important }
+
+/* selector de sección */
+#nback-modo{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9;
+  background:rgba(0,0,0,.25);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  border-radius:inherit;
+  padding:16px;
+  box-sizing:border-box;
+}
+#ventana.modo-nback #nback-modo.on{ display:flex }
+
+.nback-modo-caja{
+  width:min(94%, 480px);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.nback-modo-tit{
+  text-align:center;
+  font:900 12px/1 ui-monospace,Consolas,monospace;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:#fff;
+  text-shadow:0 2px 6px rgba(0,0,0,.5);
+  margin-bottom:4px;
+}
+.nback-modo-btn{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:14px;
+  padding:14px 18px;
+  background:#fff;
+  border:3px solid #111;
+  border-radius:18px;
+  cursor:pointer;
+  font-family:inherit;
+  text-align:left;
+  box-shadow:0 5px 0 #111, 0 8px 18px rgba(0,0,0,.2);
+  transition:transform .1s, box-shadow .1s, background .15s;
+  user-select:none;
+  width:100%;
+}
+.nback-modo-btn:hover{ transform:translateY(-2px); box-shadow:0 7px 0 #111, 0 12px 22px rgba(0,0,0,.28) }
+.nback-modo-btn:active{ transform:translateY(3px); box-shadow:0 2px 0 #111, 0 4px 8px rgba(0,0,0,.2) }
+.nback-modo-btn.on{
+  background:#f2fbf6;
+  box-shadow:0 5px 0 #111, 0 0 0 4px rgba(10,143,82,.5);
+}
+.nback-modo-btn.bloqueado{ background:#f5f5f5 }
+.nback-modo-btn.bloqueado .nback-modo-num{ color:#aaa }
+.nback-modo-num{
+  font:900 20px/1 ui-monospace,Consolas,monospace;
+  color:#0a8f52;
+  letter-spacing:1px;
+  white-space:nowrap;
+}
+.nback-modo-info{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+.nback-modo-nombre{
+  font:900 13px/1.2 ui-monospace,Consolas,monospace;
+  color:#1a1a1a;
+  letter-spacing:.5px;
+  text-transform:lowercase;
+}
+.nback-modo-desc{
+  font:700 10px/1.3 ui-monospace,Consolas,monospace;
+  color:#888;
+  letter-spacing:.3px;
+  text-transform:lowercase;
+}
+.nback-modo-precio{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font:900 12px/1 ui-monospace,Consolas,monospace;
+  color:#b45309;
+  background:#fef3c7;
+  border:2px solid #111;
+  border-radius:10px;
+  padding:6px 10px;
+  white-space:nowrap;
+}
+.nback-modo-btn.bloqueado .nback-modo-precio{
+  color:#fff;
+  background:#111;
+}
+
+/* ocultar todo lo demás en modo nback */
+#ventana.modo-nback .simon,
+#ventana.modo-nback #simon-hud,
+#ventana.modo-nback #dif-hud,
+#ventana.modo-nback #dif-grid,
+#ventana.modo-nback #dif-timebar,
+#ventana.modo-nback #stroop-hud,
+#ventana.modo-nback #stroop-palabra,
+#ventana.modo-nback #stroop-botones,
+#ventana.modo-nback #stroop-timebar,
+#ventana.modo-nback #gng-hud,
+#ventana.modo-nback #gng-btn,
+#ventana.modo-nback #afk-hud,
+#ventana.modo-nback #afk-titulo,
+#ventana.modo-nback #afk-contador,
+#ventana.modo-nback #estre-campo,
+#ventana.modo-nback #estre-hud,
+#ventana.modo-nback #estre-vidas,
+#ventana.modo-nback #desliza-grid,
+#ventana.modo-nback #desliza-hud,
+#ventana.modo-nback #desliza-timebar,
+#ventana.modo-nback #desliza-modo,
+#ventana.modo-nback #stroop2-hud,
+#ventana.modo-nback #stroop2-palabra,
+#ventana.modo-nback #stroop2-chip,
+#ventana.modo-nback #stroop2-botones,
+#ventana.modo-nback #stroop2-timebar,
+#ventana.modo-nback #stroop-modo,
+#ventana.modo-nback #clasifica-regla,
+#ventana.modo-nback #clasifica-item,
+#ventana.modo-nback #clasifica-hud,
+#ventana.modo-nback #clasifica-vidas,
+#ventana.modo-nback #clasifica-controles{ display:none !important }
+
+@media (max-width:720px){
+  #ventana.modo-nback #nback-item{
+    top:38%;
+    font-size:clamp(110px,34vw,180px);
+  }
+  #ventana.modo-nback #nback-estado{
+    bottom:96px;
+    font-size:10px;
+    padding:4px 10px;
+    max-width:88%;
+  }
+  #ventana.modo-nback #nback-boton{
+    bottom:16px;
+    height:72px;
+    width:min(86vw,340px);
+    font-size:clamp(18px,5vw,22px);
+    letter-spacing:3px;
+  }
+  #ventana.modo-nback.nback-manual #nback-boton,
+  #ventana.modo-nback.nback-manual #nback-boton-avanzar{
+    bottom:16px;
+    height:72px;
+    width:min(40vw, 150px);
+    font-size:clamp(14px,4vw,18px);
+    letter-spacing:1.5px;
+    border-width:3px;
+    border-radius:18px;
+  }
+  #ventana.modo-nback.nback-manual #nback-boton{
+    transform:translateX(calc(-50% - 82px));
+  }
+  #ventana.modo-nback.nback-manual #nback-boton:active,
+  #ventana.modo-nback.nback-manual #nback-boton.pulsado{
+    transform:translateX(calc(-50% - 82px)) translateY(3px);
+  }
+  #ventana.modo-nback.nback-manual #nback-boton-avanzar{
+    transform:translateX(calc(-50% + 82px));
+  }
+  #ventana.modo-nback.nback-manual #nback-boton-avanzar:active{
+    transform:translateX(calc(-50% + 82px)) translateY(3px);
+  }
+  .nback-modo-btn{ padding:12px 14px; gap:10px; border-width:2.5px }
+  .nback-modo-num{ font-size:17px }
+  .nback-modo-nombre{ font-size:12px }
+  .nback-modo-desc{ font-size:9px }
+  .nback-modo-precio{ font-size:11px; padding:5px 8px }
+}
+
+@media (max-width:900px) and (max-height:520px){
+  #ventana.modo-nback #nback-item{
+    top:36%;
+    font-size:clamp(80px,16vh,140px);
+  }
+  #ventana.modo-nback #nback-estado{
+    bottom:74px;
+    font-size:9px;
+    padding:3px 8px;
+  }
+  #ventana.modo-nback #nback-boton{
+    bottom:10px;
+    height:56px;
+    font-size:15px;
+  }
+  #ventana.modo-nback.nback-manual #nback-boton,
+  #ventana.modo-nback.nback-manual #nback-boton-avanzar{
+    bottom:10px;
+    height:56px;
+    width:min(32vw, 130px);
+    font-size:14px;
+    letter-spacing:1px;
+  }
+  #ventana.modo-nback.nback-manual #nback-boton{
+    transform:translateX(calc(-50% - 72px));
+  }
+  #ventana.modo-nback.nback-manual #nback-boton-avanzar{
+    transform:translateX(calc(-50% + 72px));
+  }
+}

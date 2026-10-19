@@ -1,0 +1,392 @@
+/* juegos/desliza/desliza.css */
+
+/* ─── miniatura en la card ─── */
+.desliza-mini{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:64%;
+  height:64%;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:repeat(4,1fr);
+  gap:3%;
+  padding:4%;
+  box-sizing:border-box;
+  background:#1a1a1a;
+  border-radius:8px;
+  box-shadow:inset 0 0 0 2px #000, 0 4px 10px rgba(0,0,0,.25);
+}
+.desliza-mini span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font:900 clamp(8px,1.1vw,13px)/1 ui-monospace,Consolas,monospace;
+  color:#111;
+  background:#fde047;
+  border-radius:3px;
+  box-shadow:inset 0 -1px 0 rgba(0,0,0,.18), 0 1px 0 #b88e00;
+}
+.desliza-mini span.hueco{
+  background:#1a1a1a;
+  box-shadow:none;
+  color:transparent;
+}
+
+/* ─── elementos del overlay ─── */
+#desliza-grid,
+#desliza-hud,
+#desliza-timebar{ display:none }
+
+#ventana.modo-desliza #desliza-grid{ display:grid }
+#ventana.modo-desliza #desliza-hud,
+#ventana.modo-desliza #desliza-timebar{ display:block }
+
+/* marco negro con la grilla adentro */
+#desliza-grid{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:repeat(4,1fr);
+  gap:6px;
+  padding:10px;
+  width:min(72vh, 72vw, 460px);
+  aspect-ratio:1/1;
+  background:#1a1a1a;
+  border-radius:16px;
+  box-shadow:inset 0 0 0 3px #000, 0 10px 30px rgba(0,0,0,.35);
+  z-index:5;
+  box-sizing:border-box;
+}
+
+.desliza-tile{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font:900 clamp(18px,2.6vw,34px)/1 ui-monospace,Consolas,monospace;
+  color:#111;
+  background:linear-gradient(180deg, #fde047 0%, #facc15 100%);
+  border-radius:8px;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.55),
+    inset 0 -3px 0 rgba(0,0,0,.22),
+    0 2px 4px rgba(0,0,0,.35);
+  cursor:pointer;
+  user-select:none;
+  transition:transform .07s, box-shadow .07s;
+  -webkit-tap-highlight-color:transparent;
+  text-shadow:0 1px 0 rgba(255,255,255,.4);
+}
+.desliza-tile:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.55),
+    inset 0 -3px 0 rgba(0,0,0,.22),
+    0 3px 6px rgba(0,0,0,.4);
+}
+.desliza-tile:active{
+  transform:translateY(1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -2px 0 rgba(0,0,0,.22),
+    0 1px 2px rgba(0,0,0,.3);
+}
+.desliza-tile.empty{
+  background:transparent;
+  box-shadow:none;
+  cursor:default;
+  pointer-events:none;
+}
+.desliza-tile.correcta{
+  background:linear-gradient(180deg, #fde047 0%, #f59e0b 100%);
+}
+
+/* hud */
+#desliza-hud{
+  position:absolute;
+  top:14px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#000;
+  font:700 clamp(12px,1.4vw,16px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:2px;
+  text-transform:lowercase;
+  text-shadow:0 1px 2px rgba(255,255,255,.6);
+  z-index:6;
+  pointer-events:none;
+}
+
+/* barra de tiempo */
+#desliza-timebar{
+  position:absolute;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:80%;height:10px;
+  background:rgba(0,0,0,.35);
+  border:2px solid #111;
+  border-radius:999px;
+  overflow:hidden;
+  z-index:6;
+}
+#desliza-timebar > div{ height:100%; background:#fff; width:100%; transition:width .08s linear }
+
+/* ocultar todo lo demás */
+#ventana.modo-desliza .simon,
+#ventana.modo-desliza #simon-hud,
+#ventana.modo-desliza #dif-hud,
+#ventana.modo-desliza #dif-grid,
+#ventana.modo-desliza #dif-timebar,
+#ventana.modo-desliza #stroop-hud,
+#ventana.modo-desliza #stroop-palabra,
+#ventana.modo-desliza #stroop-botones,
+#ventana.modo-desliza #stroop-timebar,
+#ventana.modo-desliza #gng-hud,
+#ventana.modo-desliza #gng-btn,
+#ventana.modo-desliza #afk-hud,
+#ventana.modo-desliza #afk-titulo,
+#ventana.modo-desliza #afk-contador,
+#ventana.modo-desliza #estre-campo,
+#ventana.modo-desliza #estre-hud,
+#ventana.modo-desliza #estre-vidas,
+#ventana.modo-desliza #stroop2-hud,
+#ventana.modo-desliza #stroop2-palabra,
+#ventana.modo-desliza #stroop2-chip,
+#ventana.modo-desliza #stroop2-botones,
+#ventana.modo-desliza #stroop2-timebar{ display:none !important }
+
+/* que desliza no aparezca en otros modos */
+#ventana.modo-diferente #desliza-grid,
+#ventana.modo-diferente #desliza-hud,
+#ventana.modo-diferente #desliza-timebar,
+#ventana.modo-stroop #desliza-grid,
+#ventana.modo-stroop #desliza-hud,
+#ventana.modo-stroop #desliza-timebar,
+#ventana.modo-stroop2 #desliza-grid,
+#ventana.modo-stroop2 #desliza-hud,
+#ventana.modo-stroop2 #desliza-timebar,
+#ventana.modo-gng #desliza-grid,
+#ventana.modo-gng #desliza-hud,
+#ventana.modo-gng #desliza-timebar,
+#ventana.modo-afk #desliza-grid,
+#ventana.modo-afk #desliza-hud,
+#ventana.modo-afk #desliza-timebar,
+#ventana.modo-simon #desliza-grid,
+#ventana.modo-simon #desliza-hud,
+#ventana.modo-simon #desliza-timebar,
+#ventana.modo-estrellas #desliza-grid,
+#ventana.modo-estrellas #desliza-hud,
+#ventana.modo-estrellas #desliza-timebar{ display:none !important }
+
+@media (max-width:720px){
+  #desliza-grid{ width:min(80vh, 86vw, 400px); gap:5px; padding:8px; border-radius:14px }
+  .desliza-tile{ border-radius:6px; font-size:clamp(16px,4.5vw,24px) }
+  .desliza-tile:hover{ transform:none }
+}
+
+/* ─── sin tiempo: ocultar la barra para este modo ─── */
+#ventana.modo-desliza #desliza-timebar{ display:none !important }
+
+/* ─── sin tiempo ─── */
+#ventana.modo-desliza #desliza-timebar{ display:none !important }
+
+/* ─── botón pista ─── */
+#desliza-pista{
+  position:absolute;
+  top:14px;
+  right:14px;
+  display:none;
+  align-items:center;
+  gap:6px;
+  padding:8px 12px;
+  background:#fef08a;
+  border:2px solid #111;
+  border-radius:12px;
+  cursor:pointer;
+  font-family:inherit;
+  z-index:8;
+  transition:transform .08s, box-shadow .08s, background .12s;
+  box-shadow:0 3px 0 #111;
+  user-select:none;
+}
+#ventana.modo-desliza #desliza-pista{ display:flex }
+#desliza-pista:hover{ background:#fde047; transform:translateY(-1px) }
+#desliza-pista:active{ transform:translateY(2px); box-shadow:0 1px 0 #111 }
+.pista-em{ font-size:16px; line-height:1 }
+.pista-txt{
+  font:700 11px/1 ui-monospace,Consolas,monospace;
+  letter-spacing:1px;
+  text-transform:lowercase;
+  color:#111;
+}
+.pista-costo{
+  font:700 10px/1 ui-monospace,Consolas,monospace;
+  letter-spacing:.5px;
+  color:#7c3aed;
+  background:#fff;
+  padding:2px 6px;
+  border-radius:6px;
+  border:1px solid #ddd6fe;
+}
+
+/* ─── tile resaltada por pista ─── */
+.desliza-tile.pista{
+  animation:pista-flash 0.55s ease-in-out infinite alternate;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.55),
+    inset 0 -3px 0 rgba(0,0,0,.22),
+    0 0 0 3px #a855f7,
+    0 2px 4px rgba(0,0,0,.35);
+}
+@keyframes pista-flash{
+  from{ filter:brightness(1) }
+  to{ filter:brightness(1.25) }
+}
+
+@media (max-width:720px){
+  #desliza-pista{ top:10px; right:10px; padding:6px 10px }
+  .pista-txt{ font-size:10px }
+  .pista-costo{ font-size:9px; padding:1px 5px }
+}
+
+/* ─── selector de tamaño ─── */
+#desliza-modo{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(12px,2vw,22px);
+  z-index:9;
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  border-radius:inherit;
+  padding:16px;
+  box-sizing:border-box;
+}
+#ventana.modo-desliza #desliza-modo.on{ display:flex }
+
+.desliza-modo-btn{
+  width:clamp(96px, 13vw, 140px);
+  height:clamp(96px, 13vw, 140px);
+  border:4px solid #111;
+  border-radius:20px;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  cursor:pointer;
+  font-family:inherit;
+  padding:0;
+  box-shadow:0 6px 0 #111, 0 10px 22px rgba(0,0,0,.25);
+  transition:transform .1s, box-shadow .1s, background .15s;
+  user-select:none;
+}
+.desliza-modo-btn .em{
+  font:900 clamp(20px, 2.6vw, 28px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:1px;
+  color:#111;
+}
+.desliza-modo-btn .lbl{
+  font:700 clamp(9px, 1vw, 11px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:1.5px;
+  text-transform:lowercase;
+  color:#666;
+}
+.desliza-modo-btn[data-tam="3"]{ background:#bbf7d0 }
+.desliza-modo-btn[data-tam="4"]{ background:#fef08a }
+.desliza-modo-btn[data-tam="5"]{ background:#fecaca }
+.desliza-modo-btn:hover{ transform:translateY(-3px); box-shadow:0 9px 0 #111, 0 14px 28px rgba(0,0,0,.3) }
+.desliza-modo-btn:active{ transform:translateY(3px); box-shadow:0 3px 0 #111, 0 6px 12px rgba(0,0,0,.25) }
+.desliza-modo-btn.on{ transform:scale(1.06); box-shadow:0 9px 0 #111, 0 0 0 6px rgba(255,255,255,.7) }
+
+/* ocultar botón pista (ya no se usa) */
+#desliza-pista{ display:none !important }
+
+@media (max-width:720px){
+  #desliza-modo{ gap:10px }
+  .desliza-modo-btn{
+    width:clamp(88px, 28vw, 120px);
+    height:clamp(88px, 28vw, 120px);
+    border-radius:16px;
+    border-width:3px;
+    box-shadow:0 4px 0 #111, 0 8px 18px rgba(0,0,0,.22);
+  }
+  .desliza-modo-btn .em{ font-size:clamp(16px, 5vw, 22px) }
+  .desliza-modo-btn .lbl{ font-size:9px; letter-spacing:1px }
+}
+
+#ventana.modo-desliza #clasifica-regla,
+#ventana.modo-desliza #clasifica-item,
+#ventana.modo-desliza #clasifica-hud,
+#ventana.modo-desliza #clasifica-vidas,
+#ventana.modo-desliza #clasifica-controles,
+#ventana.modo-desliza #nback-hud,
+#ventana.modo-desliza #nback-vidas,
+#ventana.modo-desliza #nback-item,
+#ventana.modo-desliza #nback-pista,
+#ventana.modo-desliza #nback-estado,
+#ventana.modo-desliza #nback-boton,
+#ventana.modo-desliza #nback-feedback,
+#ventana.modo-desliza #nback-modo{ display:none !important }
+
+/* ─── caja del selector ─── */
+.desliza-modo-caja{
+  width:min(94%, 460px);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.desliza-modo-tit{
+  text-align:center;
+  font:900 12px/1 ui-monospace,Consolas,monospace;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:#fff;
+  text-shadow:0 2px 6px rgba(0,0,0,.5);
+  margin-bottom:4px;
+}
+.desliza-modo-btn{
+  position:relative;
+  width:100% !important;
+  height:auto !important;
+  border-radius:18px !important;
+  padding:16px 20px !important;
+  display:grid !important;
+  grid-template-columns:auto 1fr auto !important;
+  align-items:center !important;
+  gap:14px !important;
+  text-align:left !important;
+}
+.desliza-modo-btn .em{
+  font-size:22px !important;
+  font-weight:900;
+  color:#0a8f52;
+  white-space:nowrap;
+}
+.desliza-modo-btn .lbl{
+  font:700 11px/1.2 ui-monospace,Consolas,monospace;
+  color:#666;
+  letter-spacing:.5px;
+  text-transform:lowercase;
+}
+.desliza-modo-btn .precio{
+  font:900 13px/1 ui-monospace,Consolas,monospace;
+  color:#b45309;
+  background:#fef3c7;
+  border:2px solid #111;
+  border-radius:10px;
+  padding:6px 10px;
+  white-space:nowrap;
+}
+.desliza-modo-btn .precio.gratis{
+  background:#dcfce7;
+  color:#14532d;
+}

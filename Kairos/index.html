@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kairos · Time Gestor</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F9F8F6;
+    --text: #1A2F2B;
+    --text-muted: #5C6E6A;
+    --accent: #C59B27;
+    --border: #E2E1DD;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+  
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .zen-ui {
+    display: flex;
+    gap: 60px;
+    width: 95%;
+    max-width: 950px;
+    align-items: flex-start;
+  }
+
+  /* Temporizador Visual (Izquierda) */
+  .zen-timer-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .zen-timer {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    flex-shrink: 0;
+  }
+  .zen-timer svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+  }
+  .zen-timer circle {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+  }
+  .zen-bg-circle { stroke: var(--border); }
+  .zen-progress-circle {
+    stroke: var(--accent);
+    stroke-dasharray: 942;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear, stroke 0.3s;
+  }
+  .zen-time {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .zen-time h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .zen-time p {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 10px;
+    font-weight: 600;
+  }
+
+  /* Lista de Tareas (Derecha) */
+  .zen-tasks {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .tasks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 15px;
+  }
+  .tasks-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+  }
+  .add-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: var(--text);
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: 0.2s;
+  }
+  .add-btn:hover { background: var(--accent); transform: scale(1.1); }
+
+  .tasks-list {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 5px;
+  }
+  .tasks-list::-webkit-scrollbar { width: 6px; }
+  .tasks-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .zen-task {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: 0.2s;
+    background: #fafafa;
+  }
+  .zen-task:hover { border-color: var(--accent); background: #fff; }
+  .zen-task.active { border: 2px solid var(--accent); background: #fff; box-shadow: 0 4px 15px rgba(197, 155, 39, 0.2); }
+  
+  .task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 100%;
+    gap: 15px;
+  }
+  
+  .zen-check {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #fff;
+    flex-shrink: 0;
+    transition: 0.2s;
+  }
+  .zen-task.done .zen-check { background: var(--accent); }
+  .zen-task.done .task-name { text-decoration: line-through; color: var(--text-muted); }
+  
+  .task-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .task-name { font-size: 16px; font-weight: 600; transition: 0.2s; }
+  .task-desc { font-size: 13px; color: var(--text-muted); margin-top: 4px; display: block; }
+  
+  .btn-delete { 
+    background: none; border: none; font-size: 18px; cursor: pointer; 
+    opacity: 0.5; transition: 0.2s; padding: 5px; border-radius: 50%; 
+  }
+  .btn-delete:hover { opacity: 1; transform: scale(1.1); background: #fee2e2; }
+  
+  /* Mini Reloj */
+  .mini-timer-container {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mini-timer-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  .mini-timer-bg { fill: none; stroke: var(--border); stroke-width: 3; }
+  .mini-timer-progress { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; transition: stroke-dasharray 1s linear; }
+  .mini-timer-text {
+    position: relative;
+    font-size: 10px;
+    font-weight: 800;
+    font-family: monospace;
+    color: var(--text);
+    z-index: 2;
+  }
+
+  /* Checklist */
+  .subtasks-list { margin-top: 15px; padding-left: 39px; display: flex; flex-direction: column; gap: 8px; }
+  .subtask-item { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 14px; color: var(--text); }
+  .sub-check { width: 16px; height: 16px; border: 2px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: 0.2s; }
+  .subtask-item.done .sub-check { background: var(--accent); border-color: var(--accent); color: white; }
+  .subtask-item.done span { text-decoration: line-through; color: var(--text-muted); }
+  
+  .subtask-input {
+    margin-top: 10px; width: 100%; padding: 10px; border: 1px dashed var(--accent); border-radius: 8px;
+    font-size: 13px; outline: none; background: #fafafa; transition: 0.2s; font-family: inherit; color: var(--text);
+  }
+  .subtask-input:focus { background: #fff; border-color: var(--accent); border-style: solid; }
+  .subtask-input::placeholder { color: #9ca3af; font-weight: 600; }
+
+  /* --- MODALES Y TUTORIAL --- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(5px);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+    opacity: 0; pointer-events: none; transition: 0.3s;
+  }
+  .overlay.active { opacity: 1; pointer-events: auto; }
+  
+  .modal-box {
+    background: #fff; padding: 35px; border-radius: 24px; width: 90%; max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1); transform: translateY(20px); transition: 0.3s;
+  }
+  .overlay.active .modal-box { transform: translateY(0); }
+  
+  .modal-box h2 { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 20px; }
+  
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
+  .form-group input {
+    width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 10px;
+    font-size: 15px; outline: none; transition: 0.2s; background: #fafafa;
+  }
+  .form-group input:focus { border-color: var(--accent); background: #fff; }
+  
+  .modal-actions { display: flex; gap: 10px; margin-top: 25px; }
+  .modal-actions button {
+    flex: 1; padding: 15px; border-radius: 10px; font-weight: 700; font-size: 15px; cursor: pointer; border: none;
+  }
+  .btn-cancel { background: var(--border); color: var(--text); }
+  .btn-save { background: var(--text); color: #fff; }
+
+  /* Tutorial Especial */
+  .tutorial-box { text-align: center; }
+  .tutorial-box .icon { font-size: 60px; margin-bottom: 20px; }
+  .tutorial-box p { color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; font-size: 15px; }
+</style>
+</head>
+<body>
+
+  <!-- APP PRINCIPAL -->
+  <div class="zen-ui">
+    <!-- Panel Izquierdo: Reloj -->
+    <div class="zen-timer-wrapper">
+      <div class="zen-timer">
+        <svg viewBox="0 0 320 320">
+          <circle class="zen-bg-circle" cx="160" cy="160" r="150"></circle>
+          <circle class="zen-progress-circle" id="progress-circle" cx="160" cy="160" r="150"></circle>
+        </svg>
+        <div class="zen-time">
+          <h1 id="main-time">00:00</h1>
+          <p id="main-status">Sin tareas</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel Derecho: Lista de Tareas -->
+    <div class="zen-tasks">
+      <div class="tasks-header">
+        <h2>Tus Tareas</h2>
+        <button class="add-btn" onclick="abrirModal()">+</button>
+      </div>
+      <div class="tasks-list" id="lista-tareas">
+        <!-- Tareas inyectadas por JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PARA CREAR TAREA -->
+  <div class="overlay" id="modal-tarea">
+    <div class="modal-box">
+      <h2>Nueva Tarea</h2>
+      
+      <div class="form-group">
+        <label>Título de la tarea</label>
+        <input type="text" id="tarea-nombre" placeholder="Ej. Estudiar para el examen">
+      </div>
+
+      <div class="form-group">
+        <label>Descripción (Opcional)</label>
+        <input type="text" id="tarea-desc" placeholder="Ej. Capítulos 1 al 3">
+      </div>
+
+      <div class="form-group">
+        <label>Tiempo de la tarea (Minutos)</label>
+        <input type="number" id="tarea-minutos" value="25" min="1">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn-save" onclick="guardarTarea()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUTORIAL INICIAL -->
+  <div class="overlay" id="tutorial">
+    <div class="modal-box tutorial-box">
+      <div class="icon">⏳</div>
+      <h2>Bienvenido a Kairos</h2>
+      <p>Deja de perder el tiempo en relojes aburridos. Organiza tu día, crea checklists y observa cómo el tiempo se agota en tiempo real.</p>
+      <p style="font-size: 13px; font-weight: bold; color: var(--accent);">Usa el botón "+" para empezar.</p>
+      <button class="btn-save" style="width: 100%; margin-top: 10px;" onclick="cerrarTutorial()">¡Entendido!</button>
+    </div>
+  </div>
+
+<script>
+  // --- LÓGICA DEL TUTORIAL ---
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!sessionStorage.getItem('kairos_tutorial')) {
+      document.getElementById('tutorial').classList.add('active');
+    }
+    cargarTareas();
+  });
+
+  function cerrarTutorial() {
+    sessionStorage.setItem('kairos_tutorial', 'visto');
+    document.getElementById('tutorial').classList.remove('active');
+  }
+
+  // --- LÓGICA DEL MODAL ---
+  function abrirModal() {
+    document.getElementById('modal-tarea').classList.add('active');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modal-tarea').classList.remove('active');
+    document.getElementById('tarea-nombre').value = '';
+    document.getElementById('tarea-desc').value = '';
+  }
+
+  // --- RELOJ Y PROGRESO ---
+  let timeLeft = 0;
+  let maxTime = 0;
+  let tareaActivaId = null;
+
+  function updateTimerUI() {
+    const mins = Math.floor(timeLeft / 60);
+    const secs = timeLeft % 60;
+    document.getElementById('main-time').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    
+    const circle = document.getElementById('progress-circle');
+    const circumference = 2 * Math.PI * 150; // 942
+    const offset = circumference - (timeLeft / maxTime) * circumference;
+    circle.style.strokeDashoffset = offset;
+    
+    if (timeLeft <= 0 && tareaActivaId) {
+      document.getElementById('main-time').innerText = "00:00";
+      document.getElementById('main-status').innerText = "¡Tiempo!";
+      circle.style.stroke = "#ef4444";
+    }
+  }
+  
+  document.getElementById('progress-circle').style.strokeDasharray = 2 * Math.PI * 150;
+
+  // --- LÓGICA DE TAREAS ---
+  let tareas = [];
+  try {
+    const saved = JSON.parse(sessionStorage.getItem('kairos_tareas')) || [];
+    tareas = saved.map(t => ({
+      id: t.id || Date.now(),
+      nombre: t.nombre || 'Tarea',
+      descripcion: t.descripcion || '',
+      minutos: t.minutos || 25,
+      timeLeft: t.timeLeft || (t.minutos || 25) * 60,
+      done: !!t.done,
+      subtareas: t.subtareas || []
+    }));
+  } catch(e) { tareas = []; }
+
+  function guardarTarea() {
+    const nombre = document.getElementById('tarea-nombre').value;
+    const desc = document.getElementById('tarea-desc').value;
+    const minutos = parseInt(document.getElementById('tarea-minutos').value) || 25;
+    
+    if (!nombre.trim()) return alert("Escribe un título para la tarea");
+
+    const nuevaTarea = {
+      id: Date.now(),
+      nombre: nombre,
+      descripcion: desc,
+      minutos: minutos,
+      timeLeft: minutos * 60,
+      done: false,
+      subtareas: []
+    };
+
+    tareas.push(nuevaTarea);
+    guardarEnStorage();
+    renderizarTareas();
+    cerrarModal();
+    
+    if(tareas.length === 1) seleccionarTarea(nuevaTarea.id);
+  }
+
+  function guardarEnStorage() {
+    sessionStorage.setItem('kairos_tareas', JSON.stringify(tareas));
+  }
+
+  function renderizarTareas() {
+    const lista = document.getElementById('lista-tareas');
+    lista.innerHTML = '';
+    
+    tareas.forEach(tarea => {
+      const div = document.createElement('div');
+      div.className = 'zen-task' + (tarea.done ? ' done' : '') + (tarea.id === tareaActivaId ? ' active' : '');
+      div.id = `tarea-${tarea.id}`;
+      
+      let subtasksHTML = '';
+      const subs = tarea.subtareas || [];
+      subs.forEach(sub => {
+        subtasksHTML += `
+          <div class="subtask-item ${sub.done ? 'done' : ''}" onclick="toggleSubtarea(event, ${tarea.id}, ${sub.id})">
+            <div class="sub-check">${sub.done ? '✓' : ''}</div>
+            <span>${sub.texto}</span>
+          </div>
+        `;
+      });
+
+      div.innerHTML = `
+        <div class="task-header" onclick="seleccionarTarea(${tarea.id}, event)" style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+            <div class="zen-check" onclick="togglePrincipal(event, ${tarea.id})">${tarea.done ? '✓' : ''}</div>
+            <div class="task-info">
+              <span class="task-name">${tarea.nombre}</span>
+              ${tarea.descripcion ? `<span class="task-desc">${tarea.descripcion}</span>` : ''}
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 5px;">
+            <div class="mini-timer-container">
+              <svg class="mini-timer-svg" viewBox="0 0 36 36">
+                <circle class="mini-timer-bg" cx="18" cy="18" r="16"></circle>
+                <circle class="mini-timer-progress" id="circle-${tarea.id}" cx="18" cy="18" r="16" stroke-dasharray="100, 100" stroke-dashoffset="0"></circle>
+              </svg>
+              <span class="mini-timer-text" id="timer-${tarea.id}">...</span>
+            </div>
+            <button class="btn-delete" onclick="eliminarTarea(event, ${tarea.id})" title="Eliminar tarea">🗑️</button>
+          </div>
+        </div>
+        <div class="subtasks-list">
+          ${subtasksHTML}
+          <input type="text" class="subtask-input" placeholder="+ Escribe un paso y presiona Enter" onkeydown="agregarSubtarea(event, ${tarea.id})">
+        </div>
+      `;
+
+      lista.appendChild(div);
+    });
+  }
+
+  function eliminarTarea(event, id) {
+    if(event) event.stopPropagation();
+    tareas = tareas.filter(t => t.id !== id);
+    guardarEnStorage();
+    renderizarTareas();
+    
+    if (tareaActivaId === id) {
+      tareaActivaId = null;
+      document.getElementById('main-status').innerText = "Sin tareas";
+      document.getElementById('main-time').innerText = "00:00";
+      document.getElementById('progress-circle').style.strokeDashoffset = 942;
+      const sig = tareas.find(t => !t.done);
+      if (sig) seleccionarTarea(sig.id);
+    }
+  }
+
+  function togglePrincipal(event, id) {
+    if(event) event.stopPropagation();
+    // Al completar, se elimina la tarea
+    eliminarTarea(null, id);
+  }
+
+  function seleccionarTarea(id, event) {
+    if(event) event.stopPropagation();
+    const tarea = tareas.find(t => t.id === id);
+    if (!tarea || tarea.done) return;
+
+    // Quitar el borde de todas las tareas
+    document.querySelectorAll('.zen-task').forEach(el => el.classList.remove('active'));
+    
+    // Poner el borde a la tarea seleccionada
+    const elTarea = document.getElementById(`tarea-${id}`);
+    if (elTarea) elTarea.classList.add('active');
+
+    tareaActivaId = id;
+    
+    if (tarea.timeLeft > 0) {
+      timeLeft = tarea.timeLeft;
+      maxTime = tarea.minutos * 60; 
+      document.getElementById('main-status').innerText = tarea.nombre;
+      document.getElementById('progress-circle').style.stroke = "var(--accent)";
+      updateTimerUI();
+    }
+  }
+
+  function agregarSubtarea(event, tareaId) {
+    if (event.key === 'Enter') {
+      const input = event.target;
+      const texto = input.value.trim();
+      if (texto !== '') {
+        const tarea = tareas.find(t => t.id === tareaId);
+        if (!tarea.subtareas) tarea.subtareas = [];
+        tarea.subtareas.push({ id: Date.now(), texto: texto, done: false });
+        guardarEnStorage();
+        renderizarTareas();
+        setTimeout(() => {
+          const inputs = document.querySelectorAll('.subtask-input');
+          const lastInput = inputs[inputs.length - 1];
+          if (lastInput) lastInput.focus();
+        }, 50);
+      } else {
+        input.blur();
+      }
+    }
+  }
+
+  function toggleSubtarea(event, tareaId, subtareaId) {
+    event.stopPropagation();
+    const tarea = tareas.find(t => t.id === tareaId);
+    const subtarea = tarea.subtareas.find(s => s.id === subtareaId);
+    subtarea.done = !subtarea.done;
+    guardarEnStorage();
+    renderizarTareas();
+  }
+
+  // --- MOTOR DEL TIEMPO (Pausa las demás) ---
+  setInterval(() => {
+    if (!tareaActivaId) return;
+    const tareaActiva = tareas.find(t => t.id === tareaActivaId);
+    if (!tareaActiva || tareaActiva.done) return;
+
+    if (tareaActiva.timeLeft > 0) {
+      tareaActiva.timeLeft--;
+      timeLeft = tareaActiva.timeLeft;
+      updateTimerUI();
+      guardarEnStorage(); 
+    }
+
+    // Actualizar visualmente TODOS los mini-relojes
+    tareas.forEach(tarea => {
+      const el = document.getElementById(`timer-${tarea.id}`);
+      const circle = document.getElementById(`circle-${tarea.id}`);
+      if (!el) return;
+
+      if (tarea.timeLeft <= 0) {
+        el.innerText = "0:00";
+        el.classList.add('expired');
+        if(circle) circle.setAttribute('stroke-dasharray', `0, 100`);
+      } else {
+        const mins = Math.floor(tarea.timeLeft / 60);
+        const segs = tarea.timeLeft % 60;
+        el.innerText = `${mins}:${segs.toString().padStart(2, '0')}`;
+        el.classList.remove('expired');
+        
+        if(circle) {
+          const totalSegs = tarea.minutos * 60;
+          const porcentaje = (tarea.timeLeft / totalSegs) * 100;
+          circle.setAttribute('stroke-dasharray', `${porcentaje}, 100`);
+        }
+      }
+    });
+  }, 1000);
+
+  function cargarTareas() {
+    renderizarTareas();
+    if(tareas.length > 0) {
+      const primeraActiva = tareas.find(t => !t.done);
+      if(primeraActiva) seleccionarTarea(primeraActiva.id);
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+.afk-mini{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font:900 clamp(28px,5vw,52px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:6px;
+  color:#111;
+  text-shadow:0 2px 4px rgba(0,0,0,.15);
+}
+#afk-titulo,
+#afk-contador,
+#afk-hud{ display:none }
+#afk-titulo{
+  position:absolute;
+  top:34%;left:50%;
+  transform:translate(-50%,-50%);
+  font:900 clamp(40px,9vw,120px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:10px;
+  color:#fff;
+  -webkit-text-stroke:3px #111;
+  text-shadow:0 4px 14px rgba(0,0,0,.4);
+  z-index:4;
+  user-select:none;
+}
+#afk-contador{
+  position:absolute;
+  top:58%;left:50%;
+  transform:translate(-50%,-50%);
+  font:900 clamp(36px,7vw,100px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:2px;
+  color:#fff;
+  -webkit-text-stroke:2px #111;
+  text-shadow:0 4px 12px rgba(0,0,0,.35);
+  z-index:4;
+  user-select:none;
+}
+#afk-hud{
+  position:absolute;
+  top:14px;left:50%;
+  transform:translateX(-50%);
+  color:#000;
+  font:700 clamp(12px,1.4vw,16px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:2px;
+  text-transform:lowercase;
+  text-shadow:0 1px 2px rgba(255,255,255,.6);
+  z-index:6;
+  pointer-events:none;
+}
+#ventana.modo-afk #afk-titulo,
+#ventana.modo-afk #afk-contador,
+#ventana.modo-afk #afk-hud{ display:block }
+#ventana.modo-afk .simon,
+#ventana.modo-afk #simon-hud,
+#ventana.modo-afk #dif-hud,
+#ventana.modo-afk #dif-grid,
+#ventana.modo-afk #dif-timebar,
+#ventana.modo-afk #stroop-hud,
+#ventana.modo-afk #stroop-palabra,
+#ventana.modo-afk #stroop-botones,
+#ventana.modo-afk #stroop-timebar,
+#ventana.modo-afk #gng-hud,
+#ventana.modo-afk #gng-btn{ display:none !important }
+
+#ventana.modo-afk #clasifica-regla,
+#ventana.modo-afk #clasifica-item,
+#ventana.modo-afk #clasifica-hud,
+#ventana.modo-afk #clasifica-vidas,
+#ventana.modo-afk #clasifica-controles,
+#ventana.modo-afk #nback-hud,
+#ventana.modo-afk #nback-vidas,
+#ventana.modo-afk #nback-item,
+#ventana.modo-afk #nback-pista,
+#ventana.modo-afk #nback-estado,
+#ventana.modo-afk #nback-boton,
+#ventana.modo-afk #nback-feedback,
+#ventana.modo-afk #nback-modo{ display:none !important }

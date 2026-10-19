@@ -1,0 +1,33 @@
+/* juegos/gng/gng.css */
+.gng-mini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(56px,7vw,92px);line-height:1}
+#gng-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(46vh,46vw);height:min(46vh,46vw);max-width:340px;max-height:340px;border-radius:24px;border:4px solid #111;background:#888;color:#fff;font:900 clamp(40px,6vw,72px)/1 ui-monospace,Consolas,monospace;cursor:pointer;display:none;align-items:center;justify-content:center;transition:background .12s ease;user-select:none;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+#gng-btn.verde{background:#2ecc71}
+#gng-btn.rojo{background:#e74c3c}
+#gng-btn.espera{background:#666;cursor:default;font-size:0}
+#gng-btn.espera::before{content:'';width:34%;height:34%;border-radius:50%;background:#fff;display:block}
+#gng-hud{position:absolute;top:14px;left:50%;transform:translateX(-50%);color:#000;font:700 clamp(12px,1.4vw,16px)/1 ui-monospace,Consolas,monospace;letter-spacing:2px;text-transform:lowercase;text-shadow:0 1px 2px rgba(255,255,255,.6);z-index:6;pointer-events:none;display:none}
+#ventana.modo-gng .simon,
+#ventana.modo-gng #simon-hud,
+#ventana.modo-gng #dif-hud,
+#ventana.modo-gng #dif-grid,
+#ventana.modo-gng #dif-timebar,
+#ventana.modo-gng #stroop-hud,
+#ventana.modo-gng #stroop-palabra,
+#ventana.modo-gng #stroop-botones,
+#ventana.modo-gng #stroop-timebar{display:none}
+#ventana.modo-gng #gng-hud{display:block}
+#ventana.modo-gng #gng-btn{display:flex}
+
+#ventana.modo-gng #clasifica-regla,
+#ventana.modo-gng #clasifica-item,
+#ventana.modo-gng #clasifica-hud,
+#ventana.modo-gng #clasifica-vidas,
+#ventana.modo-gng #clasifica-controles,
+#ventana.modo-gng #nback-hud,
+#ventana.modo-gng #nback-vidas,
+#ventana.modo-gng #nback-item,
+#ventana.modo-gng #nback-pista,
+#ventana.modo-gng #nback-estado,
+#ventana.modo-gng #nback-boton,
+#ventana.modo-gng #nback-feedback,
+#ventana.modo-gng #nback-modo{ display:none !important }

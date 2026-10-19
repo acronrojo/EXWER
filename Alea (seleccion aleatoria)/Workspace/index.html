@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXWER · Executive Worker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F9F8F6;
+    --surface: #FFFFFF;
+    --text-main: #1A2F2B;
+    --text-muted: #5C6E6A;
+    --accent: #C59B27;
+    --primary: #1A2F2B;
+    --border: #E2E1DD;
+    --wa: #25D366;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .logo-text {
+    font-family: 'Playfair Display', serif;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 16px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+  }
+  .logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--primary);
+    white-space: nowrap;
+  }
+  .logo-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .btn-header {
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.2;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid transparent;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  .btn-header:active { transform: scale(0.98); }
+
+  .btn-wa { background: var(--wa); color: #fff; }
+  .btn-wa:hover { background: #20b858; }
+
+  .btn-runner { background: var(--primary); color: #fff; }
+  .btn-runner:hover { background: #2c4a45; }
+
+  .hero {
+    padding: 60px 5% 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 48px;
+    line-height: 1.1;
+    color: var(--primary);
+    margin-bottom: 16px;
+    max-width: 800px;
+    margin-inline: auto;
+  }
+  .hero p {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5% 80px;
+  }
+
+  .section-header {
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+  .section-title {
+    font-size: 32px;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .section-desc {
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 32px;
+    margin-bottom: 80px;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  }
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+    border-color: var(--accent);
+  }
+  .project-img {
+    width: 100%;
+    height: 220px;
+    background: #EDEBE6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .project-info { padding: 24px; }
+  .project-info h3 { font-size: 22px; color: var(--primary); margin-bottom: 6px; }
+  .project-info p { color: var(--text-muted); font-size: 14px; }
+  .project-tag {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 30px 5%;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    background: var(--surface);
+  }
+
+  /* --- Ejecutor a pantalla completa --- */
+  #fullscreen-runner {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg);
+    display: none;
+    flex-direction: column;
+  }
+  #fullscreen-runner.active { display: flex; }
+
+  .fs-bar {
+    padding: 16px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .fs-bar span {
+    font-weight: 600;
+    color: var(--primary);
+    font-family: monospace;
+    font-size: 14px;
+  }
+  .fs-actions { display: flex; gap: 12px; }
+  .fs-actions button {
+    background: none;
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-main);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .fs-actions button:hover { background: #f0f0f0; border-color: #ccc; }
+  .fs-actions button.danger { color: #A33; border-color: #f5c6c6; }
+  .fs-actions button.danger:hover { background: #fde8e8; border-color: #fca5a5; }
+
+  .fs-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--bg);
+    text-align: center;
+    padding: 20px;
+  }
+  .fs-body:hover { background: #f0f0f0; }
+  .fs-body h3 { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
+  .fs-body p { color: var(--text-muted); font-size: 15px; }
+
+  #preview {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: #fff;
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    header { padding: 12px 4%; gap: 8px; }
+    .logo-text { font-size: 20px; }
+    .logo-sub { display: none; }
+    .btn-header { padding: 8px 12px; font-size: 13px; gap: 6px; }
+    .btn-header svg { width: 16px; height: 16px; }
+    .hero h1 { font-size: 32px; }
+    .hero p { font-size: 15px; }
+    .gallery { grid-template-columns: 1fr; gap: 20px; }
+  }
+
+  @media (max-width: 420px) {
+    #btn-open-runner span { display: none; }
+    .btn-wa span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-text">EXWER</div>
+    <div class="logo-sub">Executive Worker</div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-header btn-runner" id="btn-open-runner" title="Ejecutor de Proyectos">
+      🚀 <span>Ejecutor</span>
+    </button>
+    <a href="https://wa.me/573133093594?text=Hola,%20vengo%20de%20exwer%20para%20desarrollar%20mi%20idea%20de%20p%C3%A1gina:" target="_blank" class="btn-header btn-wa">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      <span>Contáctanos</span>
+    </a>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Construimos experiencias digitales excepcionales e innovadoras.</h1>
+  <p>Nuestro fuerte es la innovación, la eficiencia y la velocidad. Creamos soluciones limpias, funcionales y enfocadas en resultados.</p>
+</section>
+
+<main>
+  <section>
+    <div class="section-header">
+      <h2 class="section-title">Nuestros Trabajos</h2>
+      <p class="section-desc">Una selección de proyectos entregados a nuestros clientes.</p>
+    </div>
+    
+    <div class="gallery">
+      <div class="project-card" onclick="alert('Enlaza aquí tu proyecto real')">
+        <div class="project-img" style="background: #DCE1DF;">[ Imagen del Proyecto 1 ]</div>
+        <div class="project-info">
+          <h3>Verita · Entrena tu mente</h3>
+          <p>Plataforma de minijuegos cognitivos.</p>
+          <span class="project-tag">Web App</span>
+        </div>
+      </div>
+      
+      <div class="project-card" onclick="alert('Enlaza aquí tu proyecto real')">
+        <div class="project-img" style="background: #E4DCD2;">[ Imagen del Proyecto 2 ]</div>
+        <div class="project-info">
+          <h3>Calculadora Ejecutiva</h3>
+          <p>Herramienta de cálculo avanzada y rápida.</p>
+          <span class="project-tag">Utility</span>
+        </div>
+      </div>
+
+      <div class="project-card" onclick="alert('Enlaza aquí tu proyecto real')">
+        <div class="project-img" style="background: #DFDFE5;">[ Imagen del Proyecto 3 ]</div>
+        <div class="project-info">
+          <h3>Sistema Base</h3>
+          <p>Gestión interna y bases de datos para empresas.</p>
+          <span class="project-tag">Backend</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; 2026 EXWER · Executive Worker. Todos los derechos reservados.
+</footer>
+
+<div id="fullscreen-runner">
+  <div class="fs-bar">
+    <span id="file-name">Ningún proyecto cargado</span>
+    <div class="fs-actions">
+      <button id="btn-fs-reload" style="display:none;">↻ Recargar</button>
+      <button id="btn-fs-close" class="danger">✕ Cerrar</button>
+    </div>
+  </div>
+  
+  <div class="fs-body" id="fs-drop-zone">
+    <div style="font-size: 48px; margin-bottom: 16px;">📁</div>
+    <h3>Haz clic para buscar el proyecto</h3>
+    <p>Selecciona la carpeta completa (debe contener un index.html)</p>
+    <input type="file" id="fileInput" webkitdirectory directory multiple hidden>
+  </div>
+  
+  <iframe id="preview" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-same-origin"></iframe>
+</div>
+
+<script>
+  const btnOpenRunner = document.getElementById('btn-open-runner');
+  const fsRunner = document.getElementById('fullscreen-runner');
+  const fsDropZone = document.getElementById('fs-drop-zone');
+  const fileInput = document.getElementById('fileInput');
+  const btnFsReload = document.getElementById('btn-fs-reload');
+  const btnFsClose = document.getElementById('btn-fs-close');
+  const preview = document.getElementById('preview');
+  const fileNameDisplay = document.getElementById('file-name');
+  
+  let currentHtmlCode = '';
+
+  btnOpenRunner.addEventListener('click', () => {
+    fsRunner.classList.add('active');
+  });
+
+  btnFsClose.addEventListener('click', () => {
+    fsRunner.classList.remove('active');
+    resetRunner();
+  });
+
+  btnFsReload.addEventListener('click', () => {
+    if (currentHtmlCode) {
+      preview.srcdoc = currentHtmlCode;
+    }
+  });
+
+  fsDropZone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', (e) => processFiles(Array.from(e.target.files)));
+
+  function resetRunner() {
+    preview.style.display = 'none';
+    preview.srcdoc = '';
+    fsDropZone.style.display = 'flex';
+    fileNameDisplay.textContent = 'Ningún proyecto cargado';
+    btnFsReload.style.display = 'none';
+    fileInput.value = '';
+    currentHtmlCode = '';
+  }
+
+  async function processFiles(files) {
+    if (!files.length) return;
+    
+    let filesMap = {};
+    let mainHtml = null;
+
+    for (const file of files) {
+      let path = file.webkitRelativePath || file.name;
+      path = path.replace(/^[^/]+\//, ''); 
+      path = path.replace(/\\/g, '/');
+      filesMap[path] = file;
+      
+      if (file.name === 'index.html' && (!mainHtml || path.split('/').length < mainHtml.split('/').length)) {
+        mainHtml = path;
+      }
+    }
+
+    if (!mainHtml) {
+      alert('No se encontró ningún archivo index.html en la carpeta seleccionada.');
+      resetRunner();
+      return;
+    }
+
+    fileNameDisplay.textContent = 'Cargando: ' + mainHtml;
+    fsDropZone.style.display = 'none';
+    preview.style.display = 'block';
+    preview.srcdoc = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#666;">Empaquetando y ejecutando...</div>';
+
+    try {
+      const htmlText = await filesMap[mainHtml].text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+      const basePath = mainHtml.substring(0, mainHtml.lastIndexOf('/') + 1);
+
+      function cleanUrl(url) {
+        return url.split('?')[0].split('#')[0];
+      }
+
+      function findFile(url) {
+        let clean = cleanUrl(url).replace(/^\.\//, '');
+        let targetPath = basePath + clean;
+        if (filesMap[targetPath]) return filesMap[targetPath];
+        
+        let filename = clean.split('/').pop();
+        for (let key in filesMap) {
+          if (key.endsWith(filename)) return filesMap[key];
+        }
+        return null;
+      }
+
+      const mockScript = doc.createElement('script');
+      mockScript.textContent = `
+        (function() {
+          var _data = {};
+          var mock = {
+            getItem: function(k) { return _data[k] || null; },
+            setItem: function(k, v) { _data[k] = String(v); },
+            removeItem: function(k) { delete _data[k]; },
+            clear: function() { _data = {}; }
+          };
+          try {
+            Object.defineProperty(window, 'localStorage', { value: mock, configurable: true, writable: true });
+            Object.defineProperty(window, 'sessionStorage', { value: mock, configurable: true, writable: true });
+          } catch(e) {}
+        })();
+      `.replace(/<\/script>/g, '<\\/script>');
+      doc.head.insertBefore(mockScript, doc.head.firstChild);
+
+      const links = doc.querySelectorAll('link[rel="stylesheet"]');
+      for (const link of links) {
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('http') || href.startsWith('//')) continue;
+        
+        const file = findFile(href);
+        if (file) {
+          const cssText = await file.text();
+          const style = doc.createElement('style');
+          style.textContent = cssText.replace(/<\/style>/g, '<\\/style>');
+          link.parentNode.replaceChild(style, link);
+        }
+      }
+
+      const scripts = doc.querySelectorAll('script[src]');
+      for (const oldScript of scripts) {
+        const src = oldScript.getAttribute('src');
+        if (!src || src.startsWith('http') || src.startsWith('//')) continue;
+        
+        const file = findFile(src);
+        if (file) {
+          const jsText = await file.text();
+          const newScript = doc.createElement('script');
+          newScript.textContent = jsText.replace(/<\/script>/g, '<\\/script>');
+          if (oldScript.hasAttribute('type')) newScript.setAttribute('type', oldScript.getAttribute('type'));
+          oldScript.parentNode.replaceChild(newScript, oldScript);
+        }
+      }
+
+      const imgs = doc.querySelectorAll('img[src]');
+      for (const img of imgs) {
+        const src = img.getAttribute('src');
+        if (!src || src.startsWith('http') || src.startsWith('data:') || src.startsWith('//')) continue;
+        
+        const file = findFile(src);
+        if (file) {
+          const base64 = await readFileAsBase64(file);
+          img.setAttribute('src', base64);
+        }
+      }
+
+      currentHtmlCode = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+      
+      preview.srcdoc = currentHtmlCode;
+      btnFsReload.style.display = 'inline-block';
+      fileNameDisplay.textContent = 'Ejecutando: ' + mainHtml;
+      
+    } catch (err) {
+      console.error(err);
+      alert('Error al procesar el proyecto: ' + err.message);
+      resetRunner();
+    }
+  }
+
+  function readFileAsBase64(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
+  }
+</script>
+</body>
+</html>

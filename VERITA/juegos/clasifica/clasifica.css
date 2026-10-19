@@ -1,0 +1,213 @@
+/* juegos/clasifica/clasifica.css */
+
+/* ─── miniatura en la card ─── */
+.clasifica-mini{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:clamp(36px,5.5vw,64px);
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.25));
+  z-index:2;
+}
+
+/* ─── elementos ─── */
+#clasifica-regla,
+#clasifica-item,
+#clasifica-hud,
+#clasifica-vidas,
+#clasifica-controles{ display:none }
+
+#ventana.modo-clasifica #clasifica-regla,
+#ventana.modo-clasifica #clasifica-item,
+#ventana.modo-clasifica #clasifica-hud,
+#ventana.modo-clasifica #clasifica-vidas{ display:flex }
+
+/* regla: 2 cajas arriba (izquierda / derecha) */
+#clasifica-regla{
+  position:absolute;
+  top:60px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:14px;
+  z-index:6;
+  pointer-events:none;
+}
+.clasifica-regla-lado{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,255,255,.92);
+  border:2px solid #111;
+  border-radius:14px;
+  padding:6px 12px;
+  font:900 13px/1 ui-monospace,Consolas,monospace;
+  color:#111;
+  letter-spacing:1px;
+  text-transform:lowercase;
+  box-shadow:0 3px 0 #111;
+}
+.clasifica-regla-lado .em{ font-size:20px; line-height:1 }
+.clasifica-regla-lado.izq{ border-left:6px solid #3b82f6 }
+.clasifica-regla-lado.der{ border-right:6px solid #e74c3c }
+.clasifica-regla-lado b{ color:#0a8f52; font-weight:900 }
+
+/* item grande en el centro */
+#clasifica-item{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(1);
+  font-size:clamp(80px,18vw,180px);
+  line-height:1;
+  z-index:5;
+  user-select:none;
+  filter:drop-shadow(0 6px 14px rgba(0,0,0,.3));
+  transition:transform .35s cubic-bezier(.2,1.4,.4,1), opacity .3s;
+  pointer-events:none;
+}
+#clasifica-item.volar-izq{
+  transform:translate(-50%,-50%) translateX(-60vw) rotate(-25deg) scale(.6);
+  opacity:0;
+}
+#clasifica-item.volar-der{
+  transform:translate(-50%,-50%) translateX(60vw) rotate(25deg) scale(.6);
+  opacity:0;
+}
+#clasifica-item.entrando{
+  animation:clasifica-pop .3s cubic-bezier(.2,1.5,.4,1);
+}
+@keyframes clasifica-pop{
+  from{ transform:translate(-50%,-50%) scale(.3); opacity:0 }
+  to  { transform:translate(-50%,-50%) scale(1); opacity:1 }
+}
+
+/* hud arriba */
+#clasifica-hud{
+  position:absolute;
+  top:14px;left:50%;
+  transform:translateX(-50%);
+  color:#000;
+  font:700 clamp(12px,1.4vw,16px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:2px;
+  text-transform:lowercase;
+  text-shadow:0 1px 2px rgba(255,255,255,.6);
+  z-index:6;
+  pointer-events:none;
+}
+
+/* vidas arriba derecha */
+#clasifica-vidas{
+  position:absolute;
+  top:14px;right:18px;
+  display:flex;
+  gap:4px;
+  z-index:6;
+  pointer-events:none;
+}
+.clasifica-vida{
+  font-size:20px;
+  line-height:1;
+  filter:grayscale(1) opacity(.35);
+  transition:filter .3s ease;
+}
+.clasifica-vida.on{
+  filter:drop-shadow(0 0 4px rgba(231,76,60,.7));
+}
+
+/* controles en móvil: 2 botones */
+#clasifica-controles{
+  position:absolute;
+  bottom:16px;
+  left:0;right:0;
+  padding:0 16px;
+  justify-content:space-between;
+  align-items:flex-end;
+  z-index:7;
+  pointer-events:none;
+  display:none;
+}
+@media (max-width:720px){
+  #ventana.modo-clasifica #clasifica-controles{ display:flex }
+  #clasifica-regla{ top:44px }
+  .clasifica-regla-lado{ padding:5px 10px; font-size:11px }
+  .clasifica-btn{ width:110px; height:110px; font-size:46px; border-width:4px }
+}
+
+.clasifica-btn{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  background:#fff;
+  border:5px solid #111;
+  color:#111;
+  font:900 52px/1 ui-monospace,Consolas,monospace;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 6px 0 #111, 0 10px 20px rgba(0,0,0,.3);
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .06s, box-shadow .06s, background .12s;
+  pointer-events:auto;
+  font-family:inherit;
+  padding:0;
+}
+.clasifica-btn.izq{ background:#dbeafe; color:#1d4ed8 }
+.clasifica-btn.der{ background:#fee2e2; color:#b91c1c }
+.clasifica-btn:active,
+.clasifica-btn.pulsado{
+  transform:translateY(4px);
+  box-shadow:0 2px 0 #111, 0 4px 8px rgba(0,0,0,.2);
+}
+
+@media (max-width:900px) and (max-height:520px){
+  .clasifica-btn{ width:96px; height:96px; font-size:40px }
+  #clasifica-regla{ top:36px }
+  #clasifica-item{ font-size:clamp(60px,12vh,120px) }
+}
+
+/* flash verde/rojo al acertar/errar */
+#ventana.modo-clasifica::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:transparent;
+  pointer-events:none;
+  z-index:4;
+  transition:background .2s;
+  border-radius:inherit;
+}
+#ventana.modo-clasifica.flash-ok::after{ background:rgba(34,197,94,.15) }
+#ventana.modo-clasifica.flash-error::after{ background:rgba(231,76,60,.18) }
+
+/* ocultar todo lo demás */
+#ventana.modo-clasifica .simon,
+#ventana.modo-clasifica #simon-hud,
+#ventana.modo-clasifica #dif-hud,
+#ventana.modo-clasifica #dif-grid,
+#ventana.modo-clasifica #dif-timebar,
+#ventana.modo-clasifica #stroop-hud,
+#ventana.modo-clasifica #stroop-palabra,
+#ventana.modo-clasifica #stroop-botones,
+#ventana.modo-clasifica #stroop-timebar,
+#ventana.modo-clasifica #gng-hud,
+#ventana.modo-clasifica #gng-btn,
+#ventana.modo-clasifica #afk-hud,
+#ventana.modo-clasifica #afk-titulo,
+#ventana.modo-clasifica #afk-contador,
+#ventana.modo-clasifica #estre-campo,
+#ventana.modo-clasifica #estre-hud,
+#ventana.modo-clasifica #estre-vidas,
+#ventana.modo-clasifica #desliza-grid,
+#ventana.modo-clasifica #desliza-hud,
+#ventana.modo-clasifica #desliza-timebar,
+#ventana.modo-clasifica #desliza-modo,
+#ventana.modo-clasifica #stroop2-hud,
+#ventana.modo-clasifica #stroop2-palabra,
+#ventana.modo-clasifica #stroop2-chip,
+#ventana.modo-clasifica #stroop2-botones,
+#ventana.modo-clasifica #stroop2-timebar,
+#ventana.modo-clasifica #stroop-modo{ display:none !important }

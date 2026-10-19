@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Lector de Códigos · EXWER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/html5-qrcode"></script>
+<style>
+  :root {
+    --bg: #F9F8F6;
+    --surface: #FFFFFF;
+    --primary: #1A2F2B;
+    --accent: #10b981;
+    --border: #E2E1DD;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .header {
+    margin-bottom: 30px;
+  }
+  
+  .header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  
+  .header p {
+    color: #5C6E6A;
+    font-size: 15px;
+  }
+
+  #reader-container {
+    width: 100%;
+    max-width: 500px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #reader {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: none !important;
+  }
+
+  #reader__dashboard_section_csr {
+    display: none !important; /* Ocultamos la interfaz fea de la librería */
+  }
+
+  #btn-start {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(26, 47, 43, 0.2);
+    transition: all 0.2s;
+    margin-bottom: 24px;
+  }
+
+  #btn-start:hover { background: #2c4a45; transform: translateY(-2px); }
+  #btn-start:active { transform: translateY(0); }
+
+  #result-container {
+    display: none;
+    width: 100%;
+    max-width: 500px;
+    background: #ecfdf5;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 24px;
+    animation: pop 0.3s ease;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.95); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  #result-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #047857;
+    margin-bottom: 8px;
+  }
+
+  #result-text {
+    font-size: 24px;
+    font-weight: 600;
+    color: #064e3b;
+    word-break: break-all;
+    font-family: monospace;
+  }
+
+  #btn-reset {
+    margin-top: 16px;
+    background: transparent;
+    border: 1px solid #a7f3d0;
+    color: #047857;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+
+  #btn-reset:hover { background: #d1fae5; }
+
+  /* Personalización del video de la cámara */
+  video {
+    border-radius: 12px;
+    object-fit: cover !important;
+  }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Escáner de Códigos</h1>
+    <p>Apunta la cámara hacia un código de barras o QR</p>
+  </div>
+
+  <div id="reader-container">
+    <div id="reader"></div>
+  </div>
+
+  <button id="btn-start" onclick="iniciarCamara()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+    Encender Cámara
+  </button>
+
+  <div id="result-container">
+    <div id="result-label">Código Detectado:</div>
+    <div id="result-text" id="result">---</div>
+    <button id="btn-reset" onclick="reiniciar()">Escanear otro</button>
+  </div>
+
+<script>
+  let html5QrCode;
+  let escaneando = false;
+
+  function onScanSuccess(decodedText, decodedResult) {
+    if (!escaneando) return;
+    
+    // Detener la cámara al encontrar un código
+    detenerCamara();
+    
+    // Mostrar el resultado
+    document.getElementById('reader-container').style.display = 'none';
+    document.getElementById('btn-start').style.display = 'none';
+    document.getElementById('result-container').style.display = 'block';
+    document.getElementById('result-text').textContent = decodedText;
+
+    // Vibración en el celular para confirmar
+    if (navigator.vibrate) navigator.vibrate(200);
+  }
+
+  function iniciarCamara() {
+    if (escaneando) return;
+    
+    html5QrCode = new Html5Qrcode("reader");
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    document.getElementById('btn-start').innerHTML = 'Iniciando...';
+
+    html5QrCode.start(
+      { facingMode: "environment" }, // Usar cámara trasera si está disponible
+      config,
+      onScanSuccess
+    ).then(() => {
+      escaneando = true;
+      document.getElementById('btn-start').innerHTML = 'Apuntando...';
+      document.getElementById('btn-start').style.background = '#10b981';
+    }).catch((err) => {
+      alert("No se pudo acceder a la cámara. Asegúrate de darle permisos.");
+      document.getElementById('btn-start').innerHTML = 'Encender Cámara';
+    });
+  }
+
+  function detenerCamara() {
+    if (html5QrCode && escaneando) {
+      html5QrCode.stop().then(() => {
+        escaneando = false;
+      }).catch((err) => console.error(err));
+    }
+  }
+
+  function reiniciar() {
+    document.getElementById('result-container').style.display = 'none';
+    document.getElementById('reader-container').style.display = 'block';
+    document.getElementById('btn-start').style.display = 'flex';
+    document.getElementById('btn-start').innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+      Encender Cámara
+    `;
+    document.getElementById('btn-start').style.background = 'var(--primary)';
+  }
+</script>
+</body>
+</html>

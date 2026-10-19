@@ -1,0 +1,98 @@
+/* juegos/simon/simon.css */
+.simon{
+  position:absolute;
+  inset:11%;
+  border-radius:50%;
+  border:3px solid #111;
+  overflow:hidden;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.simon .q{
+  position:absolute;
+  width:50%;
+  height:50%;
+}
+.simon .q1{
+  top:0;
+  left:0;
+  background:linear-gradient(135deg, #f08080 0%, #e74c3c 100%);
+  border-top-left-radius:100%;
+}
+.simon .q2{
+  top:0;
+  right:0;
+  background:linear-gradient(135deg, #f9c84a 0%, #f39c12 100%);
+  border-top-right-radius:100%;
+}
+.simon .q3{
+  bottom:0;
+  right:0;
+  background:linear-gradient(135deg, #7ee2a8 0%, #2ecc71 100%);
+  border-bottom-right-radius:100%;
+}
+.simon .q4{
+  bottom:0;
+  left:0;
+  background:linear-gradient(135deg, #7cb8f5 0%, #3498db 100%);
+  border-bottom-left-radius:100%;
+}
+.simon::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:3px;
+  height:100%;
+  background:#111;
+  z-index:2;
+}
+.simon::after{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:0;
+  transform:translateY(-50%);
+  width:100%;
+  height:3px;
+  background:#111;
+  z-index:2;
+}
+.simon .center{
+  position:relative;
+  width:28%;
+  height:28%;
+  border-radius:50%;
+  background:#fff;
+  border:3px solid #111;
+  z-index:3;
+}
+#ventana .simon{
+  position:relative;
+  inset:auto;
+  width:min(72vh,72vw);
+  height:min(72vh,72vw);
+  border-width:5px;
+}
+#ventana .simon .center{ border-width:5px }
+#ventana .simon::before{ width:5px }
+#ventana .simon::after{ height:5px }
+#ventana .q{ transition:background-color .38s ease }
+#ventana .q.flash{ background:#fff !important; transition:none !important }
+
+#ventana.modo-simon #clasifica-regla,
+#ventana.modo-simon #clasifica-item,
+#ventana.modo-simon #clasifica-hud,
+#ventana.modo-simon #clasifica-vidas,
+#ventana.modo-simon #clasifica-controles,
+#ventana.modo-simon #nback-hud,
+#ventana.modo-simon #nback-vidas,
+#ventana.modo-simon #nback-item,
+#ventana.modo-simon #nback-pista,
+#ventana.modo-simon #nback-estado,
+#ventana.modo-simon #nback-boton,
+#ventana.modo-simon #nback-feedback,
+#ventana.modo-simon #nback-modo{ display:none !important }

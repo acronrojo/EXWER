@@ -1,0 +1,336 @@
+/* juegos/stroop/stroop.css */
+
+.stroop-mini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 clamp(18px,3vw,32px)/1 ui-monospace,Consolas,monospace;letter-spacing:2px;text-transform:uppercase}
+
+#stroop-palabra{
+  position:absolute;
+  top:38%;left:50%;
+  transform:translate(-50%,-50%);
+  font:900 clamp(56px,10vw,150px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  text-shadow:0 3px 10px rgba(0,0,0,.15);
+  user-select:none;
+  display:none;
+  z-index:4;
+}
+
+/* barra de tiempo: bottom 18px + height 10px + 2px border = ocupa 14px, borde superior a 32px */
+#stroop-timebar{
+  position:absolute;
+  bottom:18px;left:50%;
+  transform:translateX(-50%);
+  width:80%;height:10px;
+  background:rgba(0,0,0,.35);
+  border:2px solid #111;
+  border-radius:999px;
+  overflow:hidden;
+  display:none;
+  z-index:6;
+}
+#stroop-timebar > div{height:100%;background:#fff;width:100%;transition:width .08s linear}
+
+/* hud */
+#stroop-hud{
+  position:absolute;
+  top:14px;left:50%;
+  transform:translateX(-50%);
+  color:#000;
+  font:700 clamp(12px,1.4vw,16px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:2px;
+  text-transform:lowercase;
+  text-shadow:0 1px 2px rgba(255,255,255,.6);
+  z-index:6;pointer-events:none;display:none;
+}
+
+/* ─── PC (default): 4 cubos en fila, pegados encima de la barra de tiempo ─── */
+#ventana.modo-stroop #stroop-botones{
+  display:flex !important;
+  flex-direction:row !important;
+  flex-wrap:nowrap !important;
+  align-items:flex-end !important;
+  position:absolute !important;
+  top:auto !important;
+  bottom:38px !important;
+  left:50% !important;
+  right:auto !important;
+  transform:translateX(-50%) !important;
+  gap:12px;
+  z-index:5;
+  height:auto !important;
+}
+
+#ventana.modo-stroop #stroop-botones button{
+  flex:0 0 auto !important;
+  width:clamp(60px, 7vw, 100px) !important;
+  height:clamp(60px, 7vw, 100px) !important;
+  padding:0 !important;
+  margin:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  font:700 clamp(11px,1.1vw,14px)/1 ui-monospace,Consolas,monospace !important;
+  letter-spacing:1.5px;
+  text-transform:lowercase;
+  border:2px solid #111;
+  border-radius:10px;
+  cursor:pointer;
+  color:#fff;
+  font-family:inherit;
+  text-shadow:0 1px 2px rgba(0,0,0,.4);
+  box-shadow:0 3px 0 rgba(0,0,0,.35);
+  transition:transform .08s, box-shadow .08s;
+}
+#ventana.modo-stroop #stroop-botones button[data-color="rojo"]{background:#e74c3c}
+#ventana.modo-stroop #stroop-botones button[data-color="azul"]{background:#3498db}
+#ventana.modo-stroop #stroop-botones button[data-color="verde"]{background:#2ecc71}
+#ventana.modo-stroop #stroop-botones button[data-color="amarillo"]{background:#f1c40f}
+#ventana.modo-stroop #stroop-botones button:hover{ transform:translateY(-2px) }
+#ventana.modo-stroop #stroop-botones button:active{ transform:translateY(2px); box-shadow:0 1px 0 rgba(0,0,0,.35) }
+#ventana.modo-stroop #stroop-botones button.right{ background:#4cd98b !important; color:#fff; border-color:#4cd98b }
+#ventana.modo-stroop #stroop-botones button.wrong{ background:#e74c3c !important; color:#fff; border-color:#e74c3c }
+
+/* visibilidad por modo */
+#ventana.modo-stroop .simon,
+#ventana.modo-stroop #simon-hud,
+#ventana.modo-stroop #dif-hud,
+#ventana.modo-stroop #dif-grid,
+#ventana.modo-stroop #dif-timebar{display:none !important}
+#ventana.modo-stroop #stroop-hud{display:block}
+#ventana.modo-stroop #stroop-palabra{display:block}
+#ventana.modo-stroop #stroop-timebar{display:block}
+
+/* ─── celular vertical ─── */
+@media (max-width:720px){
+  #stroop-palabra{ font-size:clamp(36px,13vw,80px); top:34% }
+  #ventana.modo-stroop #stroop-botones{
+    display:grid !important;
+    grid-template-columns:repeat(2,1fr) !important;
+    grid-template-rows:repeat(2,1fr) !important;
+    align-items:stretch !important;
+    top:auto !important;
+    bottom:38px !important;
+    gap:8px !important;
+    width:min(48vh,62vw,220px) !important;
+    height:auto !important;
+    aspect-ratio:1/1 !important;
+    box-sizing:border-box !important;
+  }
+  #ventana.modo-stroop #stroop-botones button{
+    width:100% !important;
+    height:100% !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    border-radius:10px !important;
+    font-size:clamp(11px,3vw,14px) !important;
+    box-shadow:0 3px 0 rgba(0,0,0,.35);
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+}
+
+/* ─── celular acostado ─── */
+@media (max-width:900px) and (max-height:520px){
+  #stroop-palabra{ font-size:clamp(28px,6vw,56px); top:32% }
+  #stroop-timebar{ bottom:12px !important; height:8px !important }
+  #ventana.modo-stroop #stroop-botones{
+    display:grid !important;
+    grid-template-columns:repeat(2,1fr) !important;
+    grid-template-rows:repeat(2,1fr) !important;
+    align-items:stretch !important;
+    top:auto !important;
+    bottom:26px !important;
+    gap:6px !important;
+    width:min(48vh,28vw,160px) !important;
+    height:auto !important;
+    aspect-ratio:1/1 !important;
+    box-sizing:border-box !important;
+  }
+  #ventana.modo-stroop #stroop-botones button{
+    width:100% !important;
+    height:100% !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    border-radius:8px !important;
+    font-size:10px !important;
+    box-shadow:0 3px 0 rgba(0,0,0,.35);
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+}
+
+/* ─── override final: matar el aspect-ratio heredado y pegar los botones abajo ─── */
+#ventana.modo-stroop #stroop-botones{
+  display:flex !important;
+  flex-direction:row !important;
+  flex-wrap:nowrap !important;
+  align-items:center !important;
+  justify-content:center !important;
+  position:absolute !important;
+  top:auto !important;
+  bottom:38px !important;
+  left:50% !important;
+  right:auto !important;
+  transform:translateX(-50%) !important;
+  width:auto !important;
+  height:auto !important;
+  aspect-ratio:auto !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  max-width:90% !important;
+  max-height:none !important;
+  gap:12px !important;
+  z-index:5 !important;
+  box-sizing:border-box !important;
+}
+
+@media (max-width:720px){
+  #ventana.modo-stroop #stroop-botones{
+    display:grid !important;
+    grid-template-columns:repeat(2,1fr) !important;
+    grid-template-rows:repeat(2,1fr) !important;
+    align-items:stretch !important;
+    top:auto !important;
+    bottom:38px !important;
+    left:50% !important;
+    right:auto !important;
+    transform:translateX(-50%) !important;
+    width:min(48vh,62vw,220px) !important;
+    height:auto !important;
+    aspect-ratio:1/1 !important;
+    gap:8px !important;
+    box-sizing:border-box !important;
+  }
+  #ventana.modo-stroop #stroop-botones button{
+    width:100% !important;
+    height:100% !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:clamp(11px,3vw,14px) !important;
+    border-radius:10px !important;
+    box-shadow:0 3px 0 rgba(0,0,0,.35) !important;
+  }
+}
+
+@media (max-width:900px) and (max-height:520px){
+  #ventana.modo-stroop #stroop-botones{
+    display:grid !important;
+    grid-template-columns:repeat(2,1fr) !important;
+    grid-template-rows:repeat(2,1fr) !important;
+    align-items:stretch !important;
+    top:auto !important;
+    bottom:26px !important;
+    left:50% !important;
+    right:auto !important;
+    transform:translateX(-50%) !important;
+    width:min(48vh,28vw,160px) !important;
+    height:auto !important;
+    aspect-ratio:1/1 !important;
+    gap:6px !important;
+    box-sizing:border-box !important;
+  }
+  #ventana.modo-stroop #stroop-botones button{
+    width:100% !important;
+    height:100% !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:10px !important;
+    border-radius:8px !important;
+    box-shadow:0 3px 0 rgba(0,0,0,.35) !important;
+  }
+}
+
+/* ─── selector de modo (tinta / palabra) ─── */
+#stroop-modo{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(16px,2.4vw,28px);
+  z-index:8;
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  border-radius:inherit;
+  padding:16px;
+  box-sizing:border-box;
+}
+#ventana.modo-stroop #stroop-modo.on{ display:flex }
+
+.stroop-modo-btn{
+  width:clamp(120px, 16vw, 180px);
+  height:clamp(120px, 16vw, 180px);
+  border:4px solid #111;
+  border-radius:22px;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  font-family:inherit;
+  padding:0;
+  box-shadow:0 6px 0 #111, 0 10px 22px rgba(0,0,0,.25);
+  transition:transform .1s, box-shadow .1s, background .15s;
+  user-select:none;
+}
+.stroop-modo-btn .em{
+  font-size:clamp(40px, 5.5vw, 60px);
+  line-height:1;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.15));
+}
+.stroop-modo-btn .lbl{
+  font:900 clamp(13px, 1.5vw, 18px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:#111;
+}
+.stroop-modo-btn[data-modo="tinta"]{ background:#d9f99d }
+.stroop-modo-btn[data-modo="palabra"]{ background:#ddd6fe }
+.stroop-modo-btn:hover{ transform:translateY(-3px); box-shadow:0 9px 0 #111, 0 14px 28px rgba(0,0,0,.3) }
+.stroop-modo-btn:active{ transform:translateY(3px); box-shadow:0 3px 0 #111, 0 6px 12px rgba(0,0,0,.25) }
+.stroop-modo-btn.on{
+  transform:scale(1.06);
+  box-shadow:0 9px 0 #111, 0 0 0 6px rgba(255,255,255,.7);
+}
+
+@media (max-width:720px){
+  #stroop-modo{ gap:14px }
+  .stroop-modo-btn{
+    width:clamp(100px, 32vw, 140px);
+    height:clamp(100px, 32vw, 140px);
+    border-radius:18px;
+    border-width:3px;
+    box-shadow:0 4px 0 #111, 0 8px 18px rgba(0,0,0,.22);
+  }
+  .stroop-modo-btn .em{ font-size:clamp(34px, 9vw, 48px) }
+  .stroop-modo-btn .lbl{ font-size:11px; letter-spacing:2px }
+}
+
+#ventana.modo-stroop #clasifica-regla,
+#ventana.modo-stroop #clasifica-item,
+#ventana.modo-stroop #clasifica-hud,
+#ventana.modo-stroop #clasifica-vidas,
+#ventana.modo-stroop #clasifica-controles,
+#ventana.modo-stroop #nback-hud,
+#ventana.modo-stroop #nback-vidas,
+#ventana.modo-stroop #nback-item,
+#ventana.modo-stroop #nback-pista,
+#ventana.modo-stroop #nback-estado,
+#ventana.modo-stroop #nback-boton,
+#ventana.modo-stroop #nback-feedback,
+#ventana.modo-stroop #nback-modo{ display:none !important }

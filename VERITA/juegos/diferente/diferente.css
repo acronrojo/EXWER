@@ -1,0 +1,34 @@
+/* juegos/diferente/diferente.css */
+.dif-mini{position:absolute;inset:14%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:3px;font-size:clamp(12px,2vw,22px)}
+.dif-mini > div{display:flex;align-items:center;justify-content:center;line-height:1;border-radius:5px;background:rgba(80,80,80,.18);box-shadow:inset 0 0 0 1px rgba(80,80,80,.12)}
+
+#dif-hud{position:absolute;top:14px;left:50%;transform:translateX(-50%);color:#000;font:700 clamp(12px,1.4vw,16px)/1 ui-monospace,Consolas,monospace;letter-spacing:2px;text-transform:lowercase;text-shadow:0 1px 2px rgba(255,255,255,.6);z-index:6;pointer-events:none;display:none}
+#ventana.modo-diferente #dif-hud{display:block}
+#ventana.modo-diferente .simon,
+#ventana.modo-diferente #simon-hud{display:none}
+#dif-grid{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;z-index:4}
+#ventana.modo-diferente #dif-grid{display:grid}
+#dif-grid > div{display:flex;align-items:center;justify-content:center;line-height:1;border-radius:12px;background:rgba(80,80,80,.22);box-shadow:inset 0 0 0 1px rgba(80,80,80,.14);cursor:pointer;transition:transform .12s,background .12s;user-select:none}
+#dif-grid > div:hover{background:rgba(80,80,80,.32)}
+#dif-grid > div.right{background:#fff !important;animation:pop .3s}
+#dif-grid > div.wrong{background:#e74c3c !important;animation:shake .3s}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#dif-timebar{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:80%;height:10px;background:rgba(0,0,0,.35);border:2px solid #111;border-radius:999px;overflow:hidden;display:none;z-index:6}
+#ventana.modo-diferente #dif-timebar{display:block}
+#dif-timebar > div{height:100%;background:#fff;width:100%;transition:width .08s linear}
+
+/* ocultar todo lo que se cuela de otros juegos */
+#ventana.modo-diferente #clasifica-regla,
+#ventana.modo-diferente #clasifica-item,
+#ventana.modo-diferente #clasifica-hud,
+#ventana.modo-diferente #clasifica-vidas,
+#ventana.modo-diferente #clasifica-controles,
+#ventana.modo-diferente #nback-hud,
+#ventana.modo-diferente #nback-vidas,
+#ventana.modo-diferente #nback-item,
+#ventana.modo-diferente #nback-pista,
+#ventana.modo-diferente #nback-estado,
+#ventana.modo-diferente #nback-boton,
+#ventana.modo-diferente #nback-feedback,
+#ventana.modo-diferente #nback-modo{ display:none !important }

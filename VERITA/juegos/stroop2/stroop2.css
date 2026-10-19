@@ -1,0 +1,326 @@
+/* juegos/stroop2/stroop2.css */
+
+/* ─── miniatura en la card ─── */
+.stroop2-mini{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:58%;
+  height:58%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  place-items:center;
+  font-size:clamp(20px,2.8vw,34px);
+  line-height:1;
+  text-shadow:0 3px 6px rgba(0,0,0,.22);
+}
+.stroop2-mini span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+}
+.stroop2-mini .ancho{
+  grid-column:1 / 3;
+  justify-self:center;
+}
+
+/* ─── elementos ─── */
+#stroop2-palabra,
+#stroop2-chip,
+#stroop2-botones,
+#stroop2-timebar,
+#stroop2-hud{ display:none }
+
+#ventana.modo-stroop2 #stroop2-palabra,
+#ventana.modo-stroop2 #stroop2-chip,
+#ventana.modo-stroop2 #stroop2-botones,
+#ventana.modo-stroop2 #stroop2-timebar,
+#ventana.modo-stroop2 #stroop2-hud{ display:block }
+
+/* palabra grande centrada arriba */
+#stroop2-palabra{
+  position:absolute;
+  top:34%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font:900 clamp(48px,9vw,130px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  text-shadow:0 3px 10px rgba(0,0,0,.15);
+  user-select:none;
+  z-index:4;
+}
+
+/* chip diferenciador abajo (entre palabra y botones) */
+#stroop2-chip{
+  position:absolute;
+  bottom:130px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:8px 20px;
+  border-radius:999px;
+  font:900 clamp(14px,1.6vw,20px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:#fff;
+  border:3px solid #111;
+  z-index:5;
+  user-select:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+  transition:background .18s, transform .18s;
+}
+#stroop2-chip.tinta{
+  background:#111;
+  color:#fde047;
+}
+#stroop2-chip.palabra{
+  background:#fff;
+  color:#111;
+}
+
+/* botones (los mismos de stroop) */
+#ventana.modo-stroop2 #stroop2-botones{
+  display:flex !important;
+  flex-direction:row !important;
+  flex-wrap:nowrap !important;
+  align-items:center !important;
+  position:absolute !important;
+  top:auto !important;
+  bottom:38px !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  gap:12px;
+  z-index:5;
+  height:auto !important;
+}
+#ventana.modo-stroop2 #stroop2-botones button{
+  flex:0 0 auto !important;
+  width:clamp(60px, 7vw, 100px) !important;
+  height:clamp(60px, 7vw, 100px) !important;
+  padding:0 !important;
+  margin:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  font:700 clamp(11px,1.1vw,14px)/1 ui-monospace,Consolas,monospace !important;
+  letter-spacing:1.5px;
+  text-transform:lowercase;
+  border:2px solid #111;
+  border-radius:10px;
+  cursor:pointer;
+  color:#fff;
+  font-family:inherit;
+  text-shadow:0 1px 2px rgba(0,0,0,.4);
+  box-shadow:0 3px 0 rgba(0,0,0,.35);
+  transition:transform .08s, box-shadow .08s;
+}
+#ventana.modo-stroop2 #stroop2-botones button[data-color="rojo"]{ background:#e74c3c }
+#ventana.modo-stroop2 #stroop2-botones button[data-color="azul"]{ background:#3498db }
+#ventana.modo-stroop2 #stroop2-botones button[data-color="verde"]{ background:#2ecc71 }
+#ventana.modo-stroop2 #stroop2-botones button[data-color="amarillo"]{ background:#f1c40f }
+#ventana.modo-stroop2 #stroop2-botones button:hover{ transform:translateY(-2px) }
+#ventana.modo-stroop2 #stroop2-botones button:active{ transform:translateY(2px); box-shadow:0 1px 0 rgba(0,0,0,.35) }
+#ventana.modo-stroop2 #stroop2-botones button.right{ background:#4cd98b !important; color:#fff; border-color:#4cd98b }
+#ventana.modo-stroop2 #stroop2-botones button.wrong{ background:#e74c3c !important; color:#fff; border-color:#e74c3c }
+
+/* barra de tiempo (mismo estilo que stroop) */
+#stroop2-timebar{
+  position:absolute;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:80%;height:10px;
+  background:rgba(0,0,0,.35);
+  border:2px solid #111;
+  border-radius:999px;
+  overflow:hidden;
+  z-index:6;
+}
+#stroop2-timebar > div{ height:100%; background:#fff; width:100%; transition:width .08s linear }
+
+/* hud */
+#stroop2-hud{
+  position:absolute;
+  top:14px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#000;
+  font:700 clamp(12px,1.4vw,16px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:2px;
+  text-transform:lowercase;
+  text-shadow:0 1px 2px rgba(255,255,255,.6);
+  z-index:6;
+  pointer-events:none;
+}
+
+/* ocultar todo lo demás */
+#ventana.modo-stroop2 .simon,
+#ventana.modo-stroop2 #simon-hud,
+#ventana.modo-stroop2 #dif-hud,
+#ventana.modo-stroop2 #dif-grid,
+#ventana.modo-stroop2 #dif-timebar,
+#ventana.modo-stroop2 #stroop-hud,
+#ventana.modo-stroop2 #stroop-palabra,
+#ventana.modo-stroop2 #stroop-botones,
+#ventana.modo-stroop2 #stroop-timebar,
+#ventana.modo-stroop2 #gng-hud,
+#ventana.modo-stroop2 #gng-btn,
+#ventana.modo-stroop2 #afk-hud,
+#ventana.modo-stroop2 #afk-titulo,
+#ventana.modo-stroop2 #afk-contador,
+#ventana.modo-stroop2 #estre-campo,
+#ventana.modo-stroop2 #estre-hud,
+#ventana.modo-stroop2 #estre-vidas{ display:none !important }
+
+/* que stroop2 no aparezca en otros modos */
+#ventana.modo-diferente #stroop2-palabra,
+#ventana.modo-diferente #stroop2-chip,
+#ventana.modo-diferente #stroop2-botones,
+#ventana.modo-diferente #stroop2-timebar,
+#ventana.modo-diferente #stroop2-hud,
+#ventana.modo-stroop #stroop2-palabra,
+#ventana.modo-stroop #stroop2-chip,
+#ventana.modo-stroop #stroop2-botones,
+#ventana.modo-stroop #stroop2-timebar,
+#ventana.modo-stroop #stroop2-hud,
+#ventana.modo-gng #stroop2-palabra,
+#ventana.modo-gng #stroop2-chip,
+#ventana.modo-gng #stroop2-botones,
+#ventana.modo-gng #stroop2-timebar,
+#ventana.modo-gng #stroop2-hud,
+#ventana.modo-afk #stroop2-palabra,
+#ventana.modo-afk #stroop2-chip,
+#ventana.modo-afk #stroop2-botones,
+#ventana.modo-afk #stroop2-timebar,
+#ventana.modo-afk #stroop2-hud,
+#ventana.modo-simon #stroop2-palabra,
+#ventana.modo-simon #stroop2-chip,
+#ventana.modo-simon #stroop2-botones,
+#ventana.modo-simon #stroop2-timebar,
+#ventana.modo-simon #stroop2-hud,
+#ventana.modo-estrellas #stroop2-palabra,
+#ventana.modo-estrellas #stroop2-chip,
+#ventana.modo-estrellas #stroop2-botones,
+#ventana.modo-estrellas #stroop2-timebar,
+#ventana.modo-estrellas #stroop2-hud{ display:none !important }
+
+/* móvil */
+@media (max-width:720px){
+  #stroop2-palabra{ font-size:clamp(36px,12vw,80px); top:32% }
+  #stroop2-chip{ bottom:120px; font-size:13px; padding:6px 14px; letter-spacing:2px }
+  #ventana.modo-stroop2 #stroop2-botones{
+    display:grid !important;
+    grid-template-columns:repeat(2,1fr) !important;
+    grid-template-rows:repeat(2,1fr) !important;
+    align-items:stretch !important;
+    top:auto !important;
+    bottom:38px !important;
+    gap:8px !important;
+    width:min(48vh,62vw,220px) !important;
+    height:auto !important;
+    aspect-ratio:1/1 !important;
+    box-sizing:border-box !important;
+  }
+  #ventana.modo-stroop2 #stroop2-botones button{
+    width:100% !important;
+    height:100% !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    border-radius:10px !important;
+    font-size:clamp(11px,3vw,14px) !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+}
+
+/* ─── forzar miniatura 2x2 con 4 emojis ─── */
+.stroop2-mini{
+  position:absolute !important;
+  top:50% !important;
+  left:50% !important;
+  transform:translate(-50%,-50%) !important;
+  width:76% !important;
+  height:76% !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  grid-template-rows:1fr 1fr !important;
+  align-items:center !important;
+  justify-items:center !important;
+  font-size:clamp(32px,4.4vw,54px) !important;
+  line-height:1 !important;
+  text-shadow:0 3px 6px rgba(0,0,0,.22) !important;
+}
+.stroop2-mini span{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  height:100% !important;
+  line-height:1 !important;
+}
+.stroop2-mini span:nth-child(1){ grid-column:1 !important; grid-row:1 !important }
+.stroop2-mini span:nth-child(2){ grid-column:2 !important; grid-row:1 !important }
+.stroop2-mini span:nth-child(3){ grid-column:1 !important; grid-row:2 !important }
+.stroop2-mini span:nth-child(4){ grid-column:2 !important; grid-row:2 !important }
+
+#ventana.modo-stroop2 #clasifica-regla,
+#ventana.modo-stroop2 #clasifica-item,
+#ventana.modo-stroop2 #clasifica-hud,
+#ventana.modo-stroop2 #clasifica-vidas,
+#ventana.modo-stroop2 #clasifica-controles,
+#ventana.modo-stroop2 #nback-hud,
+#ventana.modo-stroop2 #nback-vidas,
+#ventana.modo-stroop2 #nback-item,
+#ventana.modo-stroop2 #nback-pista,
+#ventana.modo-stroop2 #nback-estado,
+#ventana.modo-stroop2 #nback-boton,
+#ventana.modo-stroop2 #nback-feedback,
+#ventana.modo-stroop2 #nback-modo{ display:none !important }
+
+/* ─── override final: 2 blanco con borde negro, pegado arriba de 🎨 ─── */
+.stroop2-mini{
+  position:absolute !important;
+  top:50% !important;
+  left:50% !important;
+  transform:translate(-50%,-50%) !important;
+  width:auto !important;
+  height:auto !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:0 !important;
+  grid-template-columns:none !important;
+  grid-template-rows:none !important;
+  line-height:0 !important;
+}
+
+.stroop2-mini .num{
+  font-family:ui-monospace,Consolas,monospace !important;
+  font-weight:900 !important;
+  font-size:clamp(38px,5.5vw,64px) !important;
+  line-height:0.85 !important;
+  color:#fff !important;
+  -webkit-text-stroke:4px #111;
+  paint-order:stroke fill;
+  letter-spacing:0;
+  margin-bottom:-14px;
+  z-index:2;
+  display:block !important;
+  position:relative;
+}
+
+.stroop2-mini .emoji{
+  font-size:clamp(52px,7.5vw,88px);
+  line-height:1;
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.25));
+  display:block !important;
+  position:relative;
+}
+
+.stroop2-mini > span:nth-child(3),
+.stroop2-mini > span:nth-child(4){ display:none !important }

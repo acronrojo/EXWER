@@ -1,0 +1,300 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>verita</title>
+  <link rel="stylesheet" href="estilos.css?v=20">
+  <link rel="stylesheet" href="juegos/simon/simon.css?v=20">
+  <link rel="stylesheet" href="juegos/diferente/diferente.css?v=20">
+  <link rel="stylesheet" href="juegos/stroop/stroop.css?v=31">
+  <link rel="stylesheet" href="juegos/gng/gng.css?v=20">
+  <link rel="stylesheet" href="juegos/afk/afk.css?v=20">
+  <link rel="stylesheet" href="juegos/estrellas/estrellas.css?v=20">
+  <link rel="stylesheet" href="juegos/stroop2/stroop2.css?v=20">
+  <link rel="stylesheet" href="juegos/desliza/desliza.css?v=20">
+
+  <link rel="stylesheet" href="juegos/clasifica/clasifica.css?v=20">
+  <link rel="stylesheet" href="juegos/nback/nback.css?v=20">
+</head>
+<body>
+  <div id="top">
+    <div id="brand">Verita<span>· entrena tu mente</span></div>
+    <div id="stickers">
+      <div class="sticker off" data-recurso="puntos" title="Puntos ganados en juegos"><span class="em">⭐</span><span class="val">0</span><span class="lbl">pts</span></div>
+      <div class="sticker off" data-recurso="racha" title="Días consecutivos jugando"><span class="em">🔥</span><span class="val">0</span><span class="lbl">días</span></div>
+      <div class="sticker off" data-recurso="monedas" title="Monedas para comprar juegos"><span class="em">💰</span><span class="val">0</span><span class="lbl">mon</span></div>
+      <div class="sticker off" data-recurso="diamantes" title="Diamantes: regalo a los mejores"><span class="em">💎</span><span class="val">0</span><span class="lbl">dia</span></div>
+      <div class="sticker off" data-recurso="iq" title="IQ estimado"><span class="em">🧠</span><span class="val">—</span><span class="lbl">iq</span></div>
+    </div>
+  </div>
+  <div id="vista">
+    <div class="panel on" data-p="juegos">
+      <div id="juegos-wrap">
+        <div id="juegos-head">
+          <div class="t" id="sec-titulo">ENTRENAMIENTO</div>
+          <div class="s" id="sec-sub">elige uno para empezar</div>
+          <div id="crear-entrenamientos">
+            <span class="crear-txt">crea tus entrenamientos!</span>
+            <button id="btn-add" title="añadir">+</button>
+          </div>
+        </div>
+          <div id="grid">
+            <div class="card" data-juego="diferente" data-color="#0e7490">
+              <div class="thumb">
+                <div class="dif-mini">
+                  <div>🍎</div><div>🍎</div><div>🍎</div>
+                  <div>🍎</div><div>🍏</div><div>🍎</div>
+                  <div>🍎</div><div>🍎</div><div>🍎</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">Encuentra el diferente</div>
+                <div class="skills">
+                  <span class="skill" title="atención visual">👁️</span>
+                  <span class="skill" title="atención selectiva">🎯</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-juego="stroop">
+              <div class="thumb">
+                <div class="stroop-mini" style="font-size:clamp(56px,7vw,92px);letter-spacing:0">🎨</div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">Stroop</div>
+                <div class="skills">
+                  <span class="skill" title="inhibición">🚫</span>
+                  <span class="skill" title="velocidad de procesamiento">⚡</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-juego="stroop2">
+              <div class="thumb">
+                <div class="stroop2-mini">
+                  <span>🤯</span>
+                  <span>😵‍💫</span>
+                  <span class="ancho">🎨</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">Stroop dual</div>
+                <div class="skills">
+                  <span class="skill" title="flexibilidad cognitiva">🔄</span>
+                  <span class="skill" title="cambio de tarea">🔀</span>
+                  <span class="skill" title="inhibición">🚫</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-juego="gng">
+              <div class="thumb">
+                <div class="gng-mini">🔘</div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">Gonogo</div>
+                <div class="skills">
+                  <span class="skill" title="inhibición">🚫</span>
+                  <span class="skill" title="atención sostenida">🎯</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-juego="simon" data-color="#7c3aed">
+              <div class="thumb">
+                <div class="simon">
+                  <div class="q q1"></div>
+                  <div class="q q2"></div>
+                  <div class="q q3"></div>
+                  <div class="q q4"></div>
+                  <div class="center"></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">Simón</div>
+                <div class="skills">
+                  <span class="skill" title="memoria de trabajo">🧠</span>
+                  <span class="skill" title="atención sostenida">🎯</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-juego="afk" data-color="#334155">
+              <div class="thumb">
+                <div class="afk-mini">AFK</div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">afk game (x10)</div>
+                <div class="skills">
+                  <span class="skill" title="monedas">💰</span>
+                  <span class="skill" title="monedas">💰</span>
+                  <span class="skill" title="monedas">💰</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-juego="estrellas">
+              <div class="thumb">
+                <div class="estre-mini">⭐</div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">Estrellas</div>
+                <div class="skills">
+                  <span class="skill" title="velocidad de reacción">⚡</span>
+                  <span class="skill" title="coordinación ojo-mano">👁️</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-juego="desliza">
+              <div class="thumb">
+                <div class="desliza-mini">
+                  <span>3</span><span>4</span><span>9</span><span>15</span>
+                  <span>12</span><span>7</span><span>6</span><span>13</span>
+                  <span>8</span><span>2</span><span>10</span><span>5</span>
+                  <span>11</span><span>14</span><span>1</span><span class="hueco"></span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">Desliza</div>
+                <div class="skills">
+                  <span class="skill" title="razonamiento espacial">🧭</span>
+                  <span class="skill" title="planificación">🗺️</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-juego="clasifica">
+              <div class="thumb">
+                <div class="clasifica-mini">↔️</div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">Clasifica</div>
+                <div class="skills">
+                  <span class="skill" title="velocidad de decisión">⚡</span>
+                  <span class="skill" title="atención selectiva">🎯</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-juego="nback">
+              <div class="thumb">
+                <div class="nback-mini"><span>🍎</span><span>🍎</span></div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">N-Back</div>
+                <div class="skills">
+                  <span class="skill" title="memoria de trabajo">🧠</span>
+                  <span class="skill" title="atención sostenida">🎯</span>
+                  <span class="skill" title="inhibición">🚫</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="comentarios-wrap"></div>
+      </div>
+    </div>
+    <div class="panel" data-p="monedas">
+      <div class="desliza">
+        <h2>economía</h2>
+        <p class="econ-sub">cuánto quieres recibir</p>
+
+        <div class="econ-grid" id="econ-grid">
+          <button class="econ-cell origen" data-modo="origen" data-tipo="puntos">
+            <span class="econ-em">⭐</span>
+            <span class="econ-nombre">puntos</span>
+            <span class="econ-cant">0</span>
+          </button>
+          <input id="econ-input" class="econ-input" type="number" min="0" inputmode="numeric" placeholder="0">
+          <button class="econ-cell destino" data-modo="destino" data-tipo="puntos">
+            <span class="econ-em">⭐</span>
+            <span class="econ-nombre">puntos</span>
+            <span class="econ-cant">0</span>
+          </button>
+
+          <button class="econ-cell origen" data-modo="origen" data-tipo="monedas">
+            <span class="econ-em">💰</span>
+            <span class="econ-nombre">monedas</span>
+            <span class="econ-cant">0</span>
+          </button>
+          <div class="econ-preview" id="econ-preview">—</div>
+          <button class="econ-cell destino" data-modo="destino" data-tipo="monedas">
+            <span class="econ-em">💰</span>
+            <span class="econ-nombre">monedas</span>
+            <span class="econ-cant">0</span>
+          </button>
+
+          <button class="econ-cell origen" data-modo="origen" data-tipo="gemas">
+            <span class="econ-em">💎</span>
+            <span class="econ-nombre">gemas</span>
+            <span class="econ-cant">0</span>
+          </button>
+          <button class="econ-aceptar" id="econ-aceptar" disabled>aceptar</button>
+          <button class="econ-cell destino" data-modo="destino" data-tipo="gemas">
+            <span class="econ-em">💎</span>
+            <span class="econ-nombre">gemas</span>
+            <span class="econ-cant">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="panel" data-p="perfil">
+      <div class="desliza">
+        <section>
+          <div class="perfil-top">
+            <div class="titulo-editable">
+              <h2 id="perfil-titulo">perfil</h2>
+              <button class="lapiz" id="perfil-lapiz" title="editar título">✏️</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div id="overlay">
+    <div id="ventana">
+      <div id="cerrar">×</div>
+      <div id="instruccion"></div>
+      <div id="simon-hud"></div>
+      <div id="dif-hud"></div>
+      <div class="simon">
+        <div class="q q1"></div>
+        <div class="q q2"></div>
+        <div class="q q3"></div>
+        <div class="q q4"></div>
+        <div class="center"></div>
+      </div>
+      <div id="dif-grid"></div>
+      <div id="dif-timebar"><div></div></div>
+      <div id="stroop-hud"></div>
+      <div id="stroop-palabra"></div>
+      <div id="stroop-botones"></div>
+      <div id="stroop-timebar"><div></div></div>
+      <div id="gng-hud"></div>
+      <div id="gng-btn"></div>
+      <div id="afk-hud"></div>
+      <div id="afk-titulo">AFK</div>
+      <div id="afk-contador">0</div>
+      <div id="overlay-text"></div>
+    </div>
+  </div>
+  <div id="toast"></div>
+  <div id="tabs">
+    <div class="tab on" data-v="juegos"><span class="em">🧠</span>entrenamiento</div>
+    <div class="tab" data-v="monedas"><span class="em">💰</span>economia</div>
+    <div class="tab" data-v="perfil"><span class="em">👤</span>perfil</div>
+  </div>
+  <script src="shared.js?v=20"></script>
+  <script src="tutoriales.js?v=20"></script>
+  <script src="juegos/simon/simon.js?v=20"></script>
+  <script src="juegos/diferente/diferente.js?v=20"></script>
+  <script src="juegos/stroop/stroop.js?v=31"></script>
+  <script src="juegos/gng/gng.js?v=20"></script>
+  <script src="juegos/afk/afk.js?v=20"></script>
+  <script src="juegos/estrellas/estrellas.js?v=20"></script>
+  <script src="juegos/stroop2/stroop2.js?v=20"></script>
+  <script src="juegos/desliza/desliza.js?v=20"></script>
+
+  <script src="juegos/clasifica/clasifica.js?v=20"></script>
+  <script src="juegos/nback/nback.js?v=20"></script>
+  <script src="cards.js?v=20"></script>
+  <script src="app.js?v=20"></script>
+  <script src="auth.js?v=20"></script>
+  <script src="stats.js?v=20"></script>
+  <script src="auth.js?v=20"></script>
+  <script src="comentarios.js?v=20"></script>
+  <script src="console.js?v=21"></script>
+</body>
+</html>

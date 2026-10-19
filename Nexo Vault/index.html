@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexo Vault · Bóveda Segura</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/html5-qrcode"></script>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --primary: #8b5cf6; --primary-hover: #7c3aed;
+    --text: #f8fafc; --text-muted: #94a3b8; --border: #334155;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+  
+  body {
+    background-color: var(--bg); color: var(--text); min-height: 100vh;
+    display: flex; flex-direction: column;
+    background-image: radial-gradient(circle at 50% 0%, #2e1065 0%, transparent 60%);
+    background-attachment: fixed;
+  }
+
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 30px; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+  }
+  .top-bar .logo-text { font-weight: 700; font-size: 18px; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+  .user-info { display: flex; align-items: center; gap: 15px; font-size: 14px; }
+  .user-name { color: var(--primary); font-weight: 600; }
+  .btn-logout { background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: 0.2s; }
+  .btn-logout:hover { background: #ef4444; color: #fff; }
+
+  .main-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
+
+  .auth-container {
+    background: var(--surface); width: 100%; max-width: 400px; border-radius: 24px;
+    padding: 32px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid var(--border);
+    animation: fadeIn 0.4s ease;
+  }
+  .auth-container h2 { text-align: center; margin-bottom: 24px; font-size: 22px; }
+  .auth-container input { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 10px; color: #fff; margin-bottom: 12px; outline: none; font-size: 14px; transition: 0.2s; }
+  .auth-container input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(139, 92, 246, 0.2); }
+  .auth-btn { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 15px; }
+  .auth-btn:hover { background: var(--primary-hover); }
+  .switch-auth { text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted); }
+  .switch-auth span { color: var(--primary); cursor: pointer; font-weight: 600; }
+  .switch-auth span:hover { text-decoration: underline; }
+
+  .vault-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; max-width: 1000px;
+    display: none; animation: fadeIn 0.4s ease;
+  }
+  .vault-layout.active { display: grid; }
+  @media (max-width: 850px) { .vault-layout { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface); border-radius: 20px; border: 1px solid var(--border);
+    padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column;
+  }
+  .panel h2 { font-size: 18px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+  .generator { display: flex; gap: 10px; margin-bottom: 15px; }
+  .generator input { flex: 1; background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 10px; color: #10b981; font-family: monospace; font-size: 16px; font-weight: 600; outline: none; }
+  .btn-gen { background: var(--primary); color: #fff; border: none; width: 48px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: 0.2s; }
+  .btn-gen:hover { background: var(--primary-hover); transform: scale(1.05); }
+
+  .length-selector { display: flex; gap: 6px; margin-bottom: 20px; }
+  .length-btn { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 4px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 600; transition: 0.2s; }
+  .length-btn:hover { border-color: var(--primary); color: var(--text); }
+  .length-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+  .btn-scan { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 2px dashed #10b981; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; margin-bottom: 24px; font-size: 15px; }
+  .btn-scan:hover { background: #10b981; color: #fff; border-style: solid; }
+
+  .add-form { display: flex; flex-direction: column; gap: 12px; }
+  .add-form input { background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 10px; color: #fff; outline: none; font-size: 14px; transition: 0.2s; }
+  .add-form input:focus { border-color: var(--primary); }
+  .btn-add { background: #10b981; color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 8px; font-size: 15px; }
+  .btn-add:hover { background: #059669; }
+
+  .vault-list { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; max-height: 450px; padding-right: 5px; }
+  .vault-list::-webkit-scrollbar { width: 6px; }
+  .vault-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  
+  .vault-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+  .vault-item:hover { border-color: var(--primary); }
+  .item-info { display: flex; flex-direction: column; gap: 4px; }
+  .item-name { font-size: 14px; font-weight: 700; }
+  .item-pass { font-family: monospace; color: var(--text-muted); font-size: 14px; letter-spacing: 1px; }
+  
+  .badges { display: flex; gap: 8px; align-items: center; }
+  .badge { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; }
+  .badge-strong { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+  .badge-weak { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+  .btn-icon { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; transition: 0.2s; font-size: 16px; }
+  .btn-icon:hover { color: #fff; }
+  .btn-delete:hover { color: #ef4444; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: #10b981; color: #fff; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-size: 14px; opacity: 0; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 9999; }
+  #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* --- ESCÁNER DE CÁMARA --- */
+  #scanner-modal {
+    position: fixed; inset: 0; background: #000; z-index: 1000;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+  }
+  #scanner-modal.active { display: flex; }
+  
+  #reader-container { width: 100%; max-width: 500px; margin-bottom: 20px; }
+  #reader { width: 100%; border-radius: 12px; overflow: hidden; border: none !important; }
+  
+  #reader__dashboard_section_csr, #reader__dashboard_section_swaplink { display: none !important; }
+  #reader__scan_region { background: transparent !important; }
+  #reader__scan_region img { display: none !important; }
+
+  .btn-close-scanner {
+    background: #ef4444; color: #fff; border: none; padding: 14px 30px;
+    border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s;
+  }
+  .btn-close-scanner:hover { background: #dc2626; transform: scale(1.05); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="logo-text">🔐 Nexo Vault</div>
+  <div class="user-info" id="user-info" style="display: none;">
+    <span>Hola, <span class="user-name" id="display-user">Usuario</span></span>
+    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+</div>
+
+<div class="main-wrapper">
+  <div class="auth-container" id="auth-container">
+    <h2 id="auth-title">Iniciar Sesión</h2>
+    <input type="text" id="auth-user" placeholder="Nombre de usuario">
+    <input type="password" id="auth-pass" placeholder="Contraseña Maestra">
+    <button class="auth-btn" id="auth-submit" onclick="manejarAuth()">Entrar a la Bóveda</button>
+    <div class="switch-auth">
+      <span id="auth-switch-text">¿No tienes cuenta? Regístrate</span>
+    </div>
+  </div>
+
+  <div class="vault-layout" id="vault-layout">
+    <div class="panel">
+      <h2>✨ Crear Contraseña</h2>
+      <div class="generator">
+        <input type="text" id="gen-pass" readonly value="Haz clic en generar">
+        <button class="btn-gen" id="btn-gen" title="Generar Contraseña">⚡</button>
+      </div>
+      <div class="length-selector">
+        <button class="length-btn" data-len="3">Corta</button>
+        <button class="length-btn active" data-len="7">Media</button>
+        <button class="length-btn" data-len="10">Larga</button>
+        <button class="length-btn" data-len="15">Hiper</button>
+      </div>
+      <button class="btn-scan" onclick="abrirEscaner()">📷 Scan and Kript</button>
+      <form class="add-form" id="add-form">
+        <input type="text" id="site-name" placeholder="Nombre de la página (ej. Google)" required>
+        <input type="text" id="site-pass" placeholder="Contraseña" required>
+        <button type="submit" class="btn-add">Guardar en Bóveda</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>🗄️ Tus Contraseñas</h2>
+      <div class="vault-list" id="vault-list"></div>
+    </div>
+  </div>
+</div>
+
+<div id="scanner-modal">
+  <div id="reader-container">
+    <div id="reader"></div>
+  </div>
+  <button class="btn-close-scanner" onclick="cerrarEscaner()">Cancelar Escaneo</button>
+</div>
+
+<div id="toast">Notificación</div>
+
+<script>
+  let currentUser = null;
+  let masterPassword = null;
+  let isRegisterMode = false;
+  let currentLen = 7;
+  let html5QrCode = null;
+  let escaneando = false;
+
+  function encriptar(texto, clave) {
+    if (!texto) return "";
+    let r = "";
+    for (let i = 0; i < texto.length; i++) r += String.fromCharCode(texto.charCodeAt(i) ^ clave.charCodeAt(i % clave.length));
+    return btoa(r);
+  }
+  function desencriptar(textoCifrado, clave) {
+    if (!textoCifrado) return "";
+    try {
+      let t = atob(textoCifrado); let r = "";
+      for (let i = 0; i < t.length; i++) r += String.fromCharCode(t.charCodeAt(i) ^ clave.charCodeAt(i % clave.length));
+      return r;
+    } catch(e) { return "ERROR"; }
+  }
+
+  const getAccounts = () => {
+    try { return JSON.parse(localStorage.getItem('nexo_accounts') || "{}"); }
+    catch(e) { return {}; }
+  };
+  const saveAccounts = (acc) => {
+    try { localStorage.setItem('nexo_accounts', JSON.stringify(acc)); }
+    catch(e) { mostrarToast("Error al guardar.", "#ef4444"); }
+  };
+
+  function mostrarToast(msg, color = '#10b981') {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.style.background = color; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  document.getElementById('auth-switch-text').addEventListener('click', () => {
+    isRegisterMode = !isRegisterMode;
+    document.getElementById('auth-title').textContent = isRegisterMode ? "Crear Cuenta" : "Iniciar Sesión";
+    document.getElementById('auth-submit').textContent = isRegisterMode ? "Registrarse" : "Entrar a la Bóveda";
+    document.getElementById('auth-switch-text').textContent = isRegisterMode ? "¿Ya tienes cuenta? Inicia Sesión" : "¿No tienes cuenta? Regístrate";
+  });
+
+  function manejarAuth() {
+    const user = document.getElementById('auth-user').value.trim();
+    const pass = document.getElementById('auth-pass').value;
+    if (!user || !pass) return mostrarToast("Llena todos los campos", "#ef4444");
+
+    const accounts = getAccounts();
+    if (isRegisterMode) {
+      if (accounts[user]) return mostrarToast("El usuario ya existe", "#ef4444");
+      accounts[user] = encriptar("BOVEDA_AUTENTICADA", pass);
+      saveAccounts(accounts);
+      iniciarSesion(user, pass);
+    } else {
+      if (!accounts[user]) return mostrarToast("Usuario no encontrado", "#ef4444");
+      const firma = desencriptar(accounts[user], pass);
+      if (firma === "BOVEDA_AUTENTICADA") iniciarSesion(user, pass);
+      else mostrarToast("Contraseña incorrecta", "#ef4444");
+    }
+  }
+
+  function iniciarSesion(user, pass) {
+    currentUser = user;
+    masterPassword = pass;
+    document.getElementById('auth-container').style.display = 'none';
+    document.getElementById('vault-layout').classList.add('active');
+    document.getElementById('user-info').style.display = 'flex';
+    document.getElementById('display-user').textContent = user;
+    cargarBoveda();
+  }
+
+  function cerrarSesion() {
+    currentUser = null; masterPassword = null;
+    document.getElementById('vault-layout').classList.remove('active');
+    document.getElementById('auth-container').style.display = 'block';
+    document.getElementById('user-info').style.display = 'none';
+    document.getElementById('auth-user').value = '';
+    document.getElementById('auth-pass').value = '';
+    document.getElementById('vault-list').innerHTML = '';
+  }
+
+  document.querySelectorAll('.length-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.length-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentLen = parseInt(e.target.dataset.len);
+    });
+  });
+
+  document.getElementById('btn-gen').addEventListener('click', () => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+    let pass = "";
+    for (let i = 0; i < currentLen; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    
+    document.getElementById('gen-pass').value = pass;
+    document.getElementById('site-pass').value = pass;
+    try { navigator.clipboard.writeText(pass); } catch(e) {}
+    mostrarToast("Contraseña generada y copiada");
+  });
+
+  // --- LÓGICA REAL DE LA CÁMARA (SCAN AND KRIPT) ARREGLADA ---
+  function abrirEscaner() {
+    document.getElementById('scanner-modal').classList.add('active');
+    
+    // Limpiar instancia anterior para que la cámara encienda siempre
+    if (html5QrCode) {
+      try {
+        if (escaneando) { html5QrCode.stop().catch(()=>{}); }
+        html5QrCode.clear();
+      } catch(e) {}
+      escaneando = false;
+    }
+    
+    document.getElementById('reader').innerHTML = '';
+    html5QrCode = new Html5Qrcode("reader");
+
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    html5QrCode.start(
+      { facingMode: "environment" }, 
+      config, 
+      onScanSuccess
+    ).then(() => {
+      escaneando = true;
+    }).catch((err) => {
+      alert("No se pudo acceder a la cámara. Asegúrate de darle permisos a tu navegador.");
+      cerrarEscaner();
+    });
+  }
+
+  function cerrarEscaner() {
+    document.getElementById('scanner-modal').classList.remove('active');
+    if (html5QrCode && escaneando) {
+      html5QrCode.stop().then(() => {
+        escaneando = false;
+        html5QrCode.clear();
+      }).catch(() => {});
+    }
+  }
+
+  function onScanSuccess(decodedText) {
+    if (!escaneando) return;
+    if (navigator.vibrate) navigator.vibrate(200);
+    
+    cerrarEscaner();
+
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+    let pass = "";
+    for (let i = 0; i < currentLen; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    
+    const passMixta = pass + "-K" + decodedText;
+    
+    document.getElementById('gen-pass').value = passMixta;
+    document.getElementById('site-pass').value = passMixta;
+    
+    try { navigator.clipboard.writeText(passMixta); } catch(e) {}
+    mostrarToast("¡Código escaneado! Contraseña mezclada.");
+  }
+
+  // --- LÓGICA DE LA BÓVEDA ---
+  const vaultList = document.getElementById('vault-list');
+  const addForm = document.getElementById('add-form');
+
+  function getVaultKey() { return `nexo_vault_${currentUser}`; }
+
+  function cargarBoveda() {
+    try {
+      const data = JSON.parse(localStorage.getItem(getVaultKey()) || "[]");
+      vaultList.innerHTML = '';
+      data.forEach(item => renderizarItem(item.site, item.passEnc));
+    } catch(e) {}
+  }
+
+  function guardarBoveda(site, passEnc) {
+    try {
+      const data = JSON.parse(localStorage.getItem(getVaultKey()) || "[]");
+      data.push({ site, passEnc });
+      localStorage.setItem(getVaultKey(), JSON.stringify(data));
+    } catch(e) {}
+  }
+
+  function renderizarItem(site, passEnc) {
+    const realPass = desencriptar(passEnc, masterPassword);
+    let strength = realPass.length > 10 ? 'strong' : 'weak';
+    let strengthLabel = strength === 'strong' ? 'Fuerte' : 'Débil';
+
+    const item = document.createElement('div');
+    item.className = 'vault-item';
+    item.innerHTML = `
+      <div class="item-info">
+        <span class="item-name">${site}</span>
+        <span class="item-pass" data-pass="${realPass}" data-enc="${passEnc}">••••••••</span>
+      </div>
+      <div class="badges">
+        <span class="badge badge-${strength}">${strengthLabel}</span>
+        <button class="btn-icon btn-eye" title="Mostrar">👁️</button>
+        <button class="btn-icon btn-delete" title="Eliminar">🗑️</button>
+      </div>
+    `;
+
+    const passSpan = item.querySelector('.item-pass');
+    const btnEye = item.querySelector('.btn-eye');
+    let visible = false;
+    btnEye.addEventListener('click', () => {
+      visible = !visible;
+      passSpan.textContent = visible ? passSpan.dataset.pass : '••••••••';
+      btnEye.textContent = visible ? '🙈' : '👁️';
+    });
+
+    item.querySelector('.btn-delete').addEventListener('click', () => {
+      if (confirm('¿Estás seguro de que quieres eliminar esta contraseña?')) {
+        item.remove();
+        try {
+          const data = JSON.parse(localStorage.getItem(getVaultKey()) || "[]");
+          const newData = data.filter(d => d.passEnc !== passEnc);
+          localStorage.setItem(getVaultKey(), JSON.stringify(newData));
+        } catch(e) {}
+        mostrarToast("Contraseña eliminada", "#ef4444");
+      }
+    });
+
+    vaultList.appendChild(item);
+  }
+
+  addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const site = document.getElementById('site-name').value;
+    const pass = document.getElementById('site-pass').value;
+    const passEnc = encriptar(pass, masterPassword);
+
+    guardarBoveda(site, passEnc);
+    renderizarItem(site, passEnc);
+    
+    addForm.reset();
+    document.getElementById('gen-pass').value = '';
+    mostrarToast("Guardado y encriptado correctamente");
+  });
+</script>
+</body>
+</html>

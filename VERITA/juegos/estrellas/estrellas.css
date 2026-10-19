@@ -1,0 +1,215 @@
+/* juegos/estrellas/estrellas.css */
+
+/* ─── miniatura en la card ─── */
+.estre-mini{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:clamp(40px,6vw,72px);
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.28));
+  z-index:2;
+}
+
+/* ─── elementos del overlay ─── */
+#estre-hud,
+#estre-vidas,
+#estre-campo{ display:none }
+
+#ventana.modo-estrellas #estre-hud,
+#ventana.modo-estrellas #estre-vidas,
+#ventana.modo-estrellas #estre-campo{ display:block }
+
+/* campo transparente: solo contiene las estrellas, el fondo lo pone #ventana */
+#estre-campo{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  z-index:3;
+  pointer-events:auto;
+}
+
+/* estrella fugaz */
+.estre-luz{
+  position:absolute;
+  width:64px;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  opacity:0;
+  transform:scale(.4);
+  transition:opacity .25s ease, transform .25s cubic-bezier(.2,1.4,.4,1);
+  user-select:none;
+  z-index:4;
+  will-change:opacity, transform;
+}
+.estre-luz.on{
+  opacity:1;
+  transform:scale(1);
+}
+.estre-luz.atrapada{
+  opacity:0;
+  transform:scale(1.8);
+  transition:opacity .22s, transform .26s cubic-bezier(.2,1.4,.4,1);
+}
+.estre-luz.perdida{
+  opacity:0;
+  transform:scale(.3);
+  transition:opacity .35s, transform .35s;
+}
+.estre-emoji{
+  position:relative;
+  font-size:46px;
+  line-height:1;
+  z-index:2;
+  filter:drop-shadow(0 0 8px rgba(255,220,80,.9)) drop-shadow(0 3px 5px rgba(0,0,0,.25));
+  animation:estre-girar 2.4s ease-in-out infinite;
+  transform-origin:center;
+  display:block;
+}
+.estre-glow{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,230,120,.55) 0%, rgba(255,220,80,.25) 35%, transparent 70%);
+  z-index:1;
+  animation:estre-latir 1.6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes estre-girar{
+  0%, 100%{ transform:rotate(-8deg) scale(1) }
+  50%     { transform:rotate(8deg) scale(1.08) }
+}
+@keyframes estre-latir{
+  0%, 100%{ opacity:.6; transform:scale(.85) }
+  50%     { opacity:1;  transform:scale(1.15) }
+}
+
+/* hud arriba (nivel · pts) */
+#estre-hud{
+  position:absolute;
+  top:14px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#000;
+  font:700 clamp(12px,1.4vw,16px)/1 ui-monospace,Consolas,monospace;
+  letter-spacing:2px;
+  text-transform:lowercase;
+  text-shadow:0 1px 2px rgba(255,255,255,.6);
+  z-index:6;
+  pointer-events:none;
+}
+
+/* ─── contador de estrellas abajo ─── */
+#estre-vidas{
+  position:absolute;
+  bottom:38px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  max-width:88%;
+  flex-wrap:wrap;
+  z-index:6;
+  pointer-events:none;
+  font-size:clamp(16px,2.4vw,26px);
+  line-height:1;
+  letter-spacing:0;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));
+}
+#estre-vidas .estre-punto{
+  font-size:1em;
+  line-height:1;
+  display:inline-block;
+  animation:estre-brinco .3s ease;
+}
+#estre-vidas .estre-extra{
+  font:700 clamp(11px,1.2vw,15px)/1 ui-monospace,Consolas,monospace;
+  color:#fff;
+  background:#111;
+  padding:2px 7px;
+  border-radius:6px;
+  margin-left:6px;
+  letter-spacing:.5px;
+}
+@keyframes estre-brinco{
+  0%{ transform:scale(1) }
+  50%{ transform:scale(1.35) }
+  100%{ transform:scale(1) }
+}
+
+/* ─── al perder: oscurecer toda la ventana y tapar el hud ─── */
+#ventana.modo-estrellas::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:#000;
+  opacity:0;
+  pointer-events:none;
+  border-radius:inherit;
+  transition:opacity .6s ease;
+  z-index:4;
+}
+#overlay.estre-perdiste #ventana.modo-estrellas::before{ opacity:.88 }
+#overlay.estre-perdiste .estre-luz{ opacity:0 !important; transition:opacity .5s }
+#overlay.estre-perdiste #estre-hud,
+#overlay.estre-perdiste #estre-vidas{ opacity:0; transition:opacity .5s }
+
+/* ocultar todo lo demás cuando estamos en estrellas */
+#ventana.modo-estrellas .simon,
+#ventana.modo-estrellas #simon-hud,
+#ventana.modo-estrellas #dif-hud,
+#ventana.modo-estrellas #dif-grid,
+#ventana.modo-estrellas #dif-timebar,
+#ventana.modo-estrellas #stroop-hud,
+#ventana.modo-estrellas #stroop-palabra,
+#ventana.modo-estrellas #stroop-botones,
+#ventana.modo-estrellas #stroop-timebar,
+#ventana.modo-estrellas #gng-hud,
+#ventana.modo-estrellas #gng-btn,
+#ventana.modo-estrellas #afk-hud,
+#ventana.modo-estrellas #afk-titulo,
+#ventana.modo-estrellas #afk-contador{ display:none !important }
+
+/* que estrellas no aparezca durante otros modos */
+#ventana.modo-diferente #estre-campo,
+#ventana.modo-diferente #estre-hud,
+#ventana.modo-diferente #estre-vidas,
+#ventana.modo-stroop #estre-campo,
+#ventana.modo-stroop #estre-hud,
+#ventana.modo-stroop #estre-vidas,
+#ventana.modo-gng #estre-campo,
+#ventana.modo-gng #estre-hud,
+#ventana.modo-gng #estre-vidas,
+#ventana.modo-afk #estre-campo,
+#ventana.modo-afk #estre-hud,
+#ventana.modo-afk #estre-vidas,
+#ventana.modo-simon #estre-campo,
+#ventana.modo-simon #estre-hud,
+#ventana.modo-simon #estre-vidas{ display:none !important }
+
+/* móvil */
+@media (max-width:720px){
+  .estre-luz{ width:56px; height:56px; font-size:36px }
+  #estre-vidas{ bottom:32px; font-size:clamp(14px,4vw,22px) }
+  #estre-vidas .estre-extra{ font-size:11px; padding:1px 5px; margin-left:4px }
+}
+
+#ventana.modo-estrellas #clasifica-regla,
+#ventana.modo-estrellas #clasifica-item,
+#ventana.modo-estrellas #clasifica-hud,
+#ventana.modo-estrellas #clasifica-vidas,
+#ventana.modo-estrellas #clasifica-controles,
+#ventana.modo-estrellas #nback-hud,
+#ventana.modo-estrellas #nback-vidas,
+#ventana.modo-estrellas #nback-item,
+#ventana.modo-estrellas #nback-pista,
+#ventana.modo-estrellas #nback-estado,
+#ventana.modo-estrellas #nback-boton,
+#ventana.modo-estrellas #nback-feedback,
+#ventana.modo-estrellas #nback-modo{ display:none !important }
