@@ -279,6 +279,9 @@
           <h1 id="main-time">00:00</h1>
           <p id="main-status">Sin tareas</p>
         </div>
+        <div style="margin-top: 15px;">
+          <button onclick="agregarMinuto()" style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--text); transition: 0.2s;">+1 Minuto</button>
+        </div>
       </div>
     </div>
 
@@ -361,6 +364,42 @@
   let timeLeft = 0;
   let maxTime = 0;
   let tareaActivaId = null;
+  let tiempoAgotado = false;
+  let audioCtx;
+
+  function playEndSound() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    // Suena 5 veces, con un pequeño espacio entre cada pitido
+    for(let i = 0; i < 5; i++) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      const startTime = audioCtx.currentTime + (i * 0.8);
+      osc.type = 'square'; 
+      osc.frequency.setValueAtTime(880, startTime);
+      osc.frequency.setValueAtTime(660, startTime + 0.15);
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(0.1, startTime + 0.05);
+      gain.gain.linearRampToValueAtTime(0, startTime + 0.4);
+      osc.start(startTime); 
+      osc.stop(startTime + 0.5);
+    }
+  }
+
+  function agregarMinuto() {
+    if (!tareaActivaId) return;
+    const tarea = tareas.find(t => t.id === tareaActivaId);
+    if (tarea) {
+      tarea.timeLeft += 60;
+      timeLeft = tarea.timeLeft;
+      tiempoAgotado = false;
+      document.getElementById('main-status').innerText = tarea.nombre;
+      document.getElementById('progress-circle').style.stroke = "var(--accent)";
+      updateTimerUI();
+      guardarEnStorage();
+    }
+  }
 
   function updateTimerUI() {
     const mins = Math.floor(timeLeft / 60);
@@ -376,6 +415,12 @@
       document.getElementById('main-time').innerText = "00:00";
       document.getElementById('main-status').innerText = "¡Tiempo!";
       circle.style.stroke = "#ef4444";
+      if (!tiempoAgotado) {
+        playEndSound();
+        tiempoAgotado = true;
+      }
+    } else {
+      tiempoAgotado = false;
     }
   }
   
